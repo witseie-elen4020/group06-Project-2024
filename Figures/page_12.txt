@@ -1,0 +1,32 @@
+ 
+7
+RESULTS 
+ 
+Lower Roan Subgroup  
+ 
+Detrital zircons from four arkosic sandstone samples of the Lower Roan Subgroup from Musoshi 
+(samples SPOTMU and MUS3), Konkola (sample KNS7), and the Chambishi basin (sample 
+RCB2/4) (Fig. 1) were U-Pb dated with the SHRIMP. Most of the samples have zircons almost 
+exclusively of Palaeoproterozoic age with a few younger ages. 54 zircons (55 analyses) from 
+SPOTMU and 10 zircons from MUS3 were analysed. Results are shown in concordia plots Figures 
+5 and 6 and are listed in Tables 2 and 3. Out of 55 analyses on SPOTMU, 7 were more than 10% 
+discordant, and were not taken into account during the discussion. The discordant analyses are, 
+however, plotted on the concordia diagram. The other 48 analyses plot in a large cluster of 
+207Pb/206Pb ages ranging from 2081 ± 27 Ma to 1789 ± 35 Ma. The same cluster is found with the 
+sample MUS3 (Fig. 6) with 207Pb/206Pb ages ranging from 2066 ± 20 Ma to 1883 ± 21Ma. The 
+sample from Konkola (KNS7, 14 analyses) yielded a similar detrital zircon age range to the 
+Musoshi samples, from 1996 ± 15 Ma to 1836 ± 26 (Table 4, Fig. 7). For the sample RCB2/4, due 
+to technical problems related to the SHRIMP, out of 50 analyses, 18 were completed and could be 
+plotted on a concordia diagram (Table 5, Fig. 8). 14 out of 18 analyses plot on the concordia 
+diagram in a cluster with Palaeoproterozoic ages ranging from 1813 ± 28 Ma to 2062 ± 38 Ma.  
+ 
+Four analyses show different ages and different degrees of concordancy. Two ages are 
+Neoproterozoic with 891 ± 199 Ma (115% concordant) and 908 ± 40 Ma (analyses 13.1 and 17.2). 
+The two remaining analyses are Mesoproterozoic in age at 1301 ± 46 Ma (analysis 4.1) and 1152 ± 
+65 Ma (analysis 17.1). 
+ 
+ 
+ 
+ 
+Figure 5. 206Pb/238U vs 207Pb/235U concordia plot of ages (Ma) of detrital zircons from lower Roan 
+Group arkose at Musoshi Mine, D. R. Congo (sample SPOTMU). 

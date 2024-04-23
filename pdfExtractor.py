@@ -48,4 +48,5 @@ def find_items(pdf_file, output_dir, db_file):
         conn.commit()
         conn.close()
 
-find_items("data/390.pdf", "pages", "figures.db")
+if __name__ == "__main__":
+    find_items("data/390.pdf", "pages", "figures.db")
