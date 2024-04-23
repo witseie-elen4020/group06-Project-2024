@@ -196,9 +196,5 @@ cython_debug/
 *.out
 *.app
 
-*
-!*.*
-!*/
-
 *.DS_Store
 *.vscode
