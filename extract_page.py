@@ -44,28 +44,34 @@ def extract_page(page_index:int, page:fitz.Page, file_name:str, doc:fitz.Documen
     if len(image_captions) > len(image_list):
         logs += f"Error: {len(image_captions)} Captions but only {len(image_list)} found.\n"
 
+    fig_logs = ["Label", "Number", "Caption", "Document", "Path"]
     for image_number, img in enumerate(image_list):
         if image_number >= len(image_captions):
-            label = "unlabeled"
+            label = "none"
             fig_number = "0"
-            caption = "none"
+            caption = "uncaptioned"
         else:
             [label, fig_number, caption] = (image_captions[image_number]).split(" ", 2)
+            caption = caption.strip()
 
-        file_name = "Fig_" + fig_number + ".png"
+        #file_name = "Fig. " + fig_number.strip(".") + " " + caption.replace("/","-") + ".png"
+        image_file_name = "Fig_" + fig_number.strip(".") + ".png"
 
         metadata = PngInfo()
         metadata.add_text("page", str(page_index))
         metadata.add_text("label", label)
-        metadata.add_text("number", fig_number)
+        metadata.add_text("number", fig_number.strip("."))
         metadata.add_text("caption", caption)
         metadata.add_text("document", file_name)
 
-        save_path = os.path.join(OUT_DIR, FIG_DIR, file_name)
+        save_path = os.path.join(OUT_DIR, FIG_DIR, image_file_name)
         base_image = doc.extract_image(xref=img[0])
         image_bytes = base_image["image"]
         image = Image.open(io.BytesIO(image_bytes))
         image.save(save_path, pnginfo=metadata)
+
+        # Add finger details to figure logs
+        fig_logs.append([label, fig_number, caption, file_name, fig_number])
 
 
     
@@ -77,11 +83,14 @@ def get_captions(txt:str, fig_prefix:str = "Figure", tab_prefix:str = "Table"):
     # --- good point to paralise ---
     fig_captions = []
     tab_captions = []
+    fig_capt = "" # Holds the caption being constructed
     for line_no, line in enumerate(lines):
-        if line.startswith(fig_prefix):
-            fig_captions.append(line)
+        if line.startswith(fig_prefix) or (fig_capt != "" and line):
+            fig_capt = fig_capt + line
+            if (line.strip()).endswith(".") or not line:  # Assume that caption ends with a full stop
+                fig_captions.append(fig_capt)
+                fig_capt = ""
         elif line.startswith(tab_prefix):
             tab_captions.append(line)
-    
     return fig_captions, tab_captions
 
