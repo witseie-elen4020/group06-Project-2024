@@ -25,6 +25,8 @@ if __name__ == "__main__":
         print(f"Usage: {argv[0]} <list-of-input-pdfs>")
     input_files = argv[1:]
 
+  
+
     for in_file in input_files:
         print(in_file)
         #find_items(in_file, FIG_DIR, DB_FILE)

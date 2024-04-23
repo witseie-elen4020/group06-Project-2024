@@ -73,7 +73,7 @@ def extract_page(page_index:int, page:fitz.Page, file_name:str, doc:fitz.Documen
             caption = caption.strip()
 
         #file_name = "Fig. " + fig_number.strip(".") + " " + caption.replace("/","-") + ".png"
-        image_file_name = "Fig_" + fig_number.strip(".") + ".png"
+        image_file_name = (os.path.basename(file_name))[:-4] + "_fig_" + fig_number.strip(".") + ".png"
 
         metadata = PngInfo()
         metadata.add_text("page", str(page_index))
