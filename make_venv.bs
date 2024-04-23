@@ -14,3 +14,4 @@ else
 fi
 
 pip install PyMuPDF Pillow
+pip install mpi4py

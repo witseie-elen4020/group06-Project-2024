@@ -7,6 +7,8 @@ from PIL import Image
 from PIL.PngImagePlugin import PngInfo
 import sqlite3
 
+from timeit import default_timer as timer # form benchmarking
+
 # ===================================
 # General constants 
 
@@ -20,30 +22,46 @@ OUT_DIR = "Data"
 # ===================================
 def extract_from_doc(filename):
 
-
     fig_dir = os.path.join(OUT_DIR,FIG_DIR)
     if not os.path.exists(fig_dir):
         os.makedirs(fig_dir)
+
+
     with fitz.open(filename) as doc:
         # A good point to paralleis
         for page_no, page in enumerate(doc):
             extract_page(page_no, page, filename, doc)
 
 def extract_page(page_index:int, page:fitz.Page, file_name:str, doc:fitz.Document):
-
     logs = ""
+    print(f"--- Page {page_index}")
 
+
+    _time = timer()
     # Extract all images from page
     image_list = page.get_images()
+    image_count = len(image_list)
+    _time = timer()-_time
+    print(f"Image extraction: {_time} for {image_count} images")
 
     # Extract all text from page 
+    _time = timer()
     txt = page.get_text()
+    _time = timer()-_time
+    print(f"Text extraction: {_time} for {len(txt)} characters")
 
+
+    # Find image captions (if any)
+    _time = timer()
     [image_captions, table_captions] = get_captions(txt)
+    image_capt_count = len(image_captions)
+    _time = timer()-_time
+    print(f"Caption extraction: {_time} for {image_capt_count} captions")
 
     if len(image_captions) > len(image_list):
         logs += f"Error: {len(image_captions)} Captions but only {len(image_list)} found.\n"
 
+    _time = timer()
     fig_logs = ["Label", "Number", "Caption", "Document", "Path"]
     for image_number, img in enumerate(image_list):
         if image_number >= len(image_captions):
@@ -72,6 +90,9 @@ def extract_page(page_index:int, page:fitz.Page, file_name:str, doc:fitz.Documen
 
         # Add finger details to figure logs
         fig_logs.append([label, fig_number, caption, file_name, fig_number])
+
+    _time = timer()-_time
+    print(f"Image save: {_time} for {image_count} images")
 
 
     
