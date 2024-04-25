@@ -1,4 +1,3 @@
-
 import fitz
 import os
 import sqlite3
@@ -48,5 +47,4 @@ def find_items(pdf_file, output_dir, db_file):
         conn.commit()
         conn.close()
 
-if __name__ == "__main__":
-    find_items("data/390.pdf", "pages", "figures.db")
+find_items("data/390.pdf", "pages", "figures.db")
