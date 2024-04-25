@@ -47,6 +47,7 @@ def extract_page(page_index:int, page:fitz.Page, file_name:str, doc:fitz.Documen
     _time = timer()-_time
     print(f"Image extraction: {_time} for {image_count} images")
 
+
     # Extract all text from page 
     _time = timer()
     txt = page.get_text()
@@ -60,6 +61,7 @@ def extract_page(page_index:int, page:fitz.Page, file_name:str, doc:fitz.Documen
     image_capt_count = len(image_captions)
     _time = timer()-_time
     print(f"Caption extraction: {_time} for {image_capt_count} captions")
+
 
     if len(image_captions) > len(image_list):
         logs += f"Error: {len(image_captions)} Captions but only {len(image_list)} found.\n"
@@ -76,7 +78,7 @@ def extract_page(page_index:int, page:fitz.Page, file_name:str, doc:fitz.Documen
             caption = caption.strip()
 
         #file_name = "Fig. " + fig_number.strip(".") + " " + caption.replace("/","-") + ".png"
-        image_file_name = file_name[:-4] + "_fig_" + fig_number.strip(".") + ".png"
+        image_file_name = file_name[:-4] + "_fig_" + fig_number.strip(".").strip(":") + ".png"
 
         metadata = PngInfo()
         metadata.add_text("page", str(page_index))
