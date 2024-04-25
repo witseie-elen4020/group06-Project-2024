@@ -16,22 +16,24 @@ from sys import argv
 DB_FILE = "data.db"
 LOG_FILE = "Logs.txt"
 FIG_DIR = "Figures"
-TEXT_DIR = "Text"
+TEXT_FILE = "Text.txt"
 
 OUT_DIR = "Data"
 
 # ===================================
-def extract_from_doc(filename):
-
-    fig_dir = os.path.join(OUT_DIR,FIG_DIR)
+def extract_from_doc(file_path):
+    file_name = os.path.basename(file_path)
+    print(f"=== {file_name} ===")
+    fig_dir = os.path.join(OUT_DIR,file_name,FIG_DIR)
     if not os.path.exists(fig_dir):
         os.makedirs(fig_dir)
 
 
-    with fitz.open(filename) as doc:
+    with fitz.open(file_path) as doc:
         # A good point to paralleis
         for page_no, page in enumerate(doc):
-            extract_page(page_no, page, filename, doc)
+            file_name = os.path.basename(file_path)
+            extract_page(page_no, page, file_name, doc)
 
 def extract_page(page_index:int, page:fitz.Page, file_name:str, doc:fitz.Document):
     logs = ""
@@ -74,7 +76,7 @@ def extract_page(page_index:int, page:fitz.Page, file_name:str, doc:fitz.Documen
             caption = caption.strip()
 
         #file_name = "Fig. " + fig_number.strip(".") + " " + caption.replace("/","-") + ".png"
-        image_file_name = (os.path.basename(file_name))[:-4] + "_fig_" + fig_number.strip(".") + ".png"
+        image_file_name = file_name[:-4] + "_fig_" + fig_number.strip(".") + ".png"
 
         metadata = PngInfo()
         metadata.add_text("page", str(page_index))
@@ -83,17 +85,28 @@ def extract_page(page_index:int, page:fitz.Page, file_name:str, doc:fitz.Documen
         metadata.add_text("caption", caption)
         metadata.add_text("document", file_name)
 
-        save_path = os.path.join(OUT_DIR, FIG_DIR, image_file_name)
+        save_path = os.path.join(OUT_DIR, file_name, FIG_DIR, image_file_name)
         base_image = doc.extract_image(xref=img[0])
         image_bytes = base_image["image"]
         image = Image.open(io.BytesIO(image_bytes))
         image.save(save_path, pnginfo=metadata)
 
-        # Add finger details to figure logs
+        # Add fingure details to logs
         fig_logs.append([label, fig_number, caption, file_name, fig_number])
 
     _time = timer()-_time
     print(f"Image save: {_time} for {image_count} images")
+
+    # Save all text
+    _time = timer()
+    txt_path = os.path.join(OUT_DIR, file_name, TEXT_FILE)
+    with io.open(txt_path, "a+") as f:
+        f.write(f"--- Page {page_index} ---\n")
+        f.write(txt+"\n")
+        f.close()
+    _time = timer()-_time
+    print(f"Text Write time: {_time} for {len(txt)} charaters")
+
 
 
     
@@ -125,6 +138,4 @@ if __name__ == "__main__":
   
 
     for in_file in input_files:
-        print(f"=== {in_file} ===")
-        #find_items(in_file, FIG_DIR, DB_FILE)
         extract_from_doc(in_file)

@@ -5,4 +5,4 @@ for pdf_file in $1/*.pdf; do
     arr+=$pdf_file
 done
 
-python extract_serial.py ${arr}
+python extract_serial.py ${arr} >> results.txt

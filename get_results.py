@@ -6,7 +6,7 @@ import sys
 def extract_results(infile:str, outfile:str):
     with open(infile, 'r') as f:
         lines = f.readlines()
-        rows = [["Page", "File", "Image Time", "Image Count", "Text Time", "Characters", "Caption Time", "Caption Count", "Save Time", "Save Count"]]
+        rows = [["Page", "File", "Image Time", "Image Count", "Text Time", "Characters", "Caption Time", "Caption Count", "Image Save Time", "Save Count", "Text save time", "Characters"]]
         doc = "None"
 
         for line_no, line in enumerate(lines):
@@ -14,8 +14,8 @@ def extract_results(infile:str, outfile:str):
                 doc = line.split()[1]
             if line.startswith("--- "):
                 row = [line.split()[-1]] # Get page number
-                row = row + [doc] + 8*[0.0] # Array of flotas to store times
-                for _i in range(1,5):
+                row = row + [doc] + 10*[0.0] # Array of flotas to store times
+                for _i in range(1,6):
                     #row[_i] = int(lines[line_no+_i][2])
                     line_vals = lines[line_no+_i].split()
                     row[2*_i] = line_vals[2]  # This column corresponds to the time taken
