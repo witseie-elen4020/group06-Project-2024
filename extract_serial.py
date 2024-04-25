@@ -8,6 +8,7 @@ from PIL.PngImagePlugin import PngInfo
 import sqlite3
 
 from timeit import default_timer as timer # form benchmarking
+from sys import argv
 
 # ===================================
 # General constants 
@@ -115,3 +116,15 @@ def get_captions(txt:str, fig_prefix:str = "Figure", tab_prefix:str = "Table"):
             tab_captions.append(line)
     return fig_captions, tab_captions
 
+if __name__ == "__main__":
+
+    if len(argv) == 1:
+        print(f"Usage: {argv[0]} <list-of-input-pdfs>")
+    input_files = argv[1:]
+
+  
+
+    for in_file in input_files:
+        print(f"=== {in_file} ===")
+        #find_items(in_file, FIG_DIR, DB_FILE)
+        extract_from_doc(in_file)
