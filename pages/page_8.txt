@@ -1,0 +1,54 @@
+ 
+3
+Conglomeratic and arkosic sedimentary rocks at the base of the Lower Roan Subgroup of the Roan 
+Group at Nchanga Mine nonconformably overlie the Nchanga Granite. Previous petrographic 
+studies have indicated that there are pebbles and zircons from the Nchanga Granite in basal Roan 
+conglomerates, suggesting that the lower Roan sediments are derived by erosion of a basement that 
+included the Nchanga Granite (Garlick and Brummer, 1951; Binda, 1972; Garlick, 1973). A suite 
+of detrital zircons from a cross-bedded Roan arkose above the contact with the Nchanga Granite, 
+was extracted and dated by Armstrong et al. (2005).  U-Pb SHRIMP dating of these detrital zircons 
+reveals two distinct age populations, one at around 2000 to 1800 Ma (corresponding to the age of 
+the Palaeoproterozoic basement), and the other at 880 Ma (corresponding to the age of the Nchanga 
+Granite) (Armstrong et al., 2005). This unequivocally proves that the Nchanga Granite provided 
+detritus to the Lower Roan, and sets a firm upper limit of c. 880 Ma for the age of the Katanga 
+Supergroup. 
+ 
+The Upper Roan Subgroup is dominated by chemically precipitated and clastically reworked 
+(mainly dolomitic) carbonate rocks and evaporites (anhydrite and gypsum), with few siliciclastic 
+rocks. The depositional age of these rocks is poorly constrained except that they are intruded by 
+numerous metagabbroic sills and dykes, which have given an age of c. 750 Ma (Armstrong et al., 
+2005). Hence that is a minimum age for the Upper Roan Group. At the base of the Upper Roan 
+Subgroup, the Ore Shale Member (which hosts most of the mineralization in the Zambian 
+Copperbelt) is cut by microcline-bearing metamorphic veins, which were dated from two localities- 
+Roan Antelope Mine (now Luanshya, Zambia) and Musoshi Mine in D.R. Congo – using the Rb-Sr 
+dating technique (Cahen et al., 1970). The two results taken together were interpreted by Cahen et 
+al. (1984) to give a minimum age for the Roan Group of 870 ± 42 Ma. If the Rb-Sr ages of the 
+microcline veins are accepted, then the age limits for the Roan Group are as follows:- Lower Roan 
+Subgroup: maximum age c. 880 Ma; minimum age 870-42 = 838 Ma; Upper Roan Subgroup: 
+maximum age c. 880 Ma; minimum age c. 750 Ma. If the Rb-Sr ages of the microcline veins are 
+regarded as unreliable, then the Roan Group was deposited sometime between c. 880 Ma and c. 750 
+Ma.  
+ 
+Nguba Group-Mwashya Subgroup 
+ 
+The Mwashya Subgroup, formerly regarded as forming the top of the Roan Group (e.g., Cailteux et 
+al., 2003), is now regarded as the lowermost subgroup of the Nguba Group, since it rests with an 
+erosional unconformity on upper Roan Group rocks, as well as on older basement, and passes 
+conformably into the Grand Conglomerat in places (Cahen, 1978; Wendorff, 2003b). It consists 
+mainly of carbonates and black shales, but contains a thin pyroclastic unit with associated 
+stratiform banded magnetite/haematite iron formations, which form a regional stratigraphic marker 
+(Lefebvre, 1973, 1975; Cailteux et al., 2003a).  
+ 
+In western Zambia, in the Mwinilunga area, Key and Banda (2000) have mapped a several hundred 
+metres thick volcanic unit within the Mwashya Subgroup, the Lwavu Formation, which consists of 
+basalts and basaltic andesites. These volcanics have been dated at 760 ± 5 Ma, utilising SHRIMP 
+U-Pb dating on zircons (Armstrong, 2000; Liyungu et al., 2001; Key et al., 2001). This is the first 
+accurate date for any Katangan lithological unit. Recent dating by Barron et al. (2003) of two 
+gabbroic bodies in the Solwezi area, NW Zambia, yielded ages of 745 ± 7.8 Ma and 752.6 ± 8.6 
+Ma, which are consistent with them being part of the extensional mafic magmatism associated with 
+the Mwashya Subgroup (Kabengele et al., 2003).  
+ 
+Nguba Group-Grand Conglomerat Formation 
+ 
+The diamictite of the Grand Conglomerat has long been known to be a glacial tillite (Cahen, 1978). 
+The evidence for a glacial origin of this diamictite rests on the common and widespread occurrence 
