@@ -7,6 +7,10 @@ import csv
 import os
 from sys import argv
 
+SUCCESS_STR = "--- success ---"
+WARN_STR = "!-- Warning --!"
+
+
 OUT_DIR = "Data"
 
 def extract_tabs(file:str):
@@ -25,7 +29,7 @@ def extract_tabs(file:str):
                     print(line, "... was found\n")
                     tab_captions.append(line)
 
-            tabs = page.find_tables(strategy="lines")
+            tabs = page.find_tables(strategy="lines_strict")
             #print(f"{len(tabs.tables)} tables were found")
 
             capt_count = len(tab_captions)
@@ -47,9 +51,38 @@ def extract_tabs(file:str):
                 tab_name = "Tab_" + tab_captions[i].split()[1]
                 outfile = os.path.join(OUT_DIR, tab_name)+".csv"
                 with open(outfile,'w') as o:
-                    writer = csv.writer(o)
-                    writer.writerows(rows)
+                    for row_nuumb,row in enumerate(rows):
+                        try:
+                            writer = csv.writer(o)
+                            writer.writerow(row)
+                        except UnicodeEncodeError as e:
+                            print("gg")
+                            print(e.args)
+                            print(len(row))
                     o.close()
+                        
+# Recursive funtion used to find tables in the docuemnt
+def get_tabs(tab_capts:list[str], page: fitz.Page, logs =[], stratergy="lines_strict"):
+    #Storres andy issues wich may occures
+    # First use strick lines to see if tables are found (this tends to be most accurate)
+    tabs = page.find_tables(strategy="lines")
+    tab_count = len(tabs.tables)
+    capt_count = len(tab_capts)
+    if tab_count == capt_count:
+        # Inital table idenfication deemed successful
+        logs.append(SUCCESS_STR)
+        logs.append(f"{capt_count} found as expected")
+        return tabs, logs
+    elif tab_count > capt_count:
+        # More tables have been found than there are captions availabe
+        # Use more stringent table idenifcation
+        tabs = page.find_tables(strategy="lines_strict")
+        tab_count = len(tabs.tables)
+        logs.append(f"{tab_count} tables found with only {capt_count} expected")
+    else:
+        # Table finding was too strict, try using plane text
+        tabs = page.find_tables(strategy="text")
+        tab_count = len(tabs.tables)
 
 
 if __name__ == "__main__":
