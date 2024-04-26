@@ -62,7 +62,7 @@ def extract_tabs(file:str):
                     o.close()
                         
 # Recursive funtion used to find tables in the docuemnt
-def get_tabs(tab_capts:list[str], page: fitz.Page, logs =[], stratergy="lines_strict"):
+def get_tabs(tab_capts, page: fitz.Page, logs =[], stratergy="lines_strict"):
     #Storres andy issues wich may occures
     # First use strick lines to see if tables are found (this tends to be most accurate)
     tabs = page.find_tables(strategy="lines")
