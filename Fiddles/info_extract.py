@@ -12,6 +12,7 @@ X_MAX = 595
 Y_MAX = 842
 
 TITLE_RECT = Rect(180, 450, X_MAX, 520)
+AUTOR_RECT = Rect(180, 530, X_MAX, 620)
 
 if len(argv) == 1:
     print(f"Usage {argv[0]} <filename>")
@@ -27,7 +28,13 @@ with fitz.open(file) as doc:
     # Attempt to locate title
     title_txt = page.get_textbox(TITLE_RECT, textpage=textpage)
     title_txt = ' '.join(title_txt.split())
-    print(f"Title = {title_txt}")
+    print(f"Title = {title_txt}\n")
+
+    # Attempt to find authors
+    authors_txt = page.get_textbox(AUTOR_RECT, textpage=textpage)
+    authors_txt = authors_txt.strip()
+    authors_txt = " ".join(authors_txt.replace("\n", ",").replace(" AND", ",").split()).replace(",,",",").replace(", ,",",") # Ensure that list of authors is seperated by commas only
+    print(f"Authors = {authors_txt}")
 
 
 
