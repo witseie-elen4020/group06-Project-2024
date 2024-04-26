@@ -16,6 +16,7 @@ AUTOR_RECT = Rect(180, 535, X_MAX, 620)
 
 ABSTRACT_START_TXT = "ABSTRACT"
 CONTENT_START_TXT = "CONTENTS "
+PAGE_TXT = "Page"
 END_TXT = "_oOo_"
 
 if len(argv) == 1:
@@ -67,29 +68,34 @@ with fitz.open(file) as doc:
 
 
     # === Page 4 === 
-    # Get table of contents 
+    # Get table of contents
     page = doc[3]
     textpage = page.get_textpage()
 
+    # NOTE the pumupdf get_table method is not used becuase it is porne to alisgment errors
+
     # Use Formatting patterns to extract the table of contents
-    content_start = page.search_for(CONTENT_START_TXT, textpage=textpage) # Directly above content table
-    content_end = page.search_for(END_TXT, textpage=textpage)              # Directly below content table
+    content_start = page.search_for(PAGE_TXT, textpage=textpage) # Directly above content table
+    content_end = page.search_for(END_TXT, textpage=textpage)    # Directly below content table
 
-    content_rect = Rect(0, content_start[0][3], X_MAX, content_end[0][1])
-    content_txt = page.get_textbox(content_rect).strip()
+    # Get contens headdings
+    sect_rect = Rect(0, content_start[0][3], content_start[0][0], content_end[0][1]) # Area below 'page' and left of page number
+    sect_txt = page.get_textbox(sect_rect, textpage=textpage).strip().split("\n")
+    sect_txt = [_t.strip() for _t in sect_txt if not _t.isspace()]
 
-    #print(content_txt)
+    # Get contents page Numbers
+    numb_rect = Rect(content_start[0][0], content_start[0][3], content_start[0][2], content_end[0][1])
+    numb_txt = page.get_textbox(numb_rect, textpage=textpage).strip().split("\n")
+    numb_txt = [_t.strip() for _t in numb_txt if not _t.isspace()]
 
-    content_tab = page.find_tables(clip=content_rect, strategy="text")[0]
-    rows = content_tab.extract()
-    rows = [r for r in rows if r != ['','']] # Remove empty rows
-
+    conents = list(zip(sect_txt, numb_txt))
     print("Contents")
-    for row in rows:
+    for row in conents:
         print(row)
     print("\n")
 
     # Use formatting patterns to get the issn
-    isbn_rect = page.search_for("ISBN")
-    print(isbn_rect)
+    isbn_rect = page.search_for("ISBN", textpage=textpage)[0]
+    isbn_txt = page.get_textbox(Rect(isbn_rect[2], isbn_rect[1], X_MAX, isbn_rect[3]), textpage=textpage).strip()
+    print(f"ISBN = {isbn_txt}.\n")
 
