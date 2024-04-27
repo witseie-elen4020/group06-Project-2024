@@ -200,3 +200,4 @@ cython_debug/
 *.vscode
 
 pages/
+*Data.db
