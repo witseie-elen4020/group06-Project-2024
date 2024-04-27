@@ -199,6 +199,4 @@ cython_debug/
 *.DS_Store
 *.vscode
 
-data/
-data
-Data
+pages/
