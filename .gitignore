@@ -199,6 +199,7 @@ cython_debug/
 *.DS_Store
 *.vscode
 
-data/
-data
-Data
+pages/
+myenv/
+src/Data/
+*Data.db
