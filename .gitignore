@@ -201,5 +201,6 @@ cython_debug/
 
 pages/
 myenv/
+data
 src/Data/
 *Data.db
