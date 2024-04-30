@@ -12,7 +12,7 @@ X_MAX = 595
 Y_MAX = 842
 
 TITLE_RECT = Rect(180, 450, X_MAX, 520)
-AUTOR_RECT = Rect(180, 535, X_MAX, 620)
+AUTHOR_RECT = Rect(180, 535, X_MAX, 620)
 
 ABSTRACT_START_TXT = "ABSTRACT"
 CONTENT_START_TXT = "CONTENTS "
@@ -36,7 +36,7 @@ with fitz.open(file) as doc:
     print(f"Title = {title_txt}\n")
 
     # Attempt to find authors
-    authors_txt = page.get_textbox(AUTOR_RECT, textpage=textpage)
+    authors_txt = page.get_textbox(AUTHOR_RECT, textpage=textpage)
     authors_txt = authors_txt.strip()
     authors_txt = " ".join(authors_txt.replace("\n", ",").replace(" AND", ",").split()).replace(",,",",").replace(", ,",",") # Ensure that list of authors is seperated by commas only
     print(f"Authors = {authors_txt}\n")
@@ -46,8 +46,7 @@ with fitz.open(file) as doc:
     page = doc[1]
     textpage = page.get_textpage()
     txt = page.get_text("text", textpage=textpage)
-    # Locate date
-    date_txt = txt.strip().rsplit("\n", 1)[-1]
+    date_txt = txt.strip().rsplit("\n", 1)[-1] # Find and remove publication date
     print(f"Date = {date_txt}\n")
 
 
