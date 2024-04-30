@@ -6,6 +6,8 @@ import io
 from sys import argv
 from typing import Tuple,List
 
+from timeit import default_timer as timer # form benchmarking
+
 from extract_error import ExtractionError
 
 # =========================
@@ -40,18 +42,24 @@ class PageData():
         self.raw_txt = ""       # Text contined on page: to be printed
         self.fig_capts = []     # Holds figure caption
         self.table_capts = []   # Holds table captions
-        self.headding = []      # Holds CAPLTALISED section headdings that occure on the page
+        self.headdings = []     # Holds CAPLTALISED section headdings that occure on the page
+        self.sections = []      # Holds text blocks split up into sections 
         self.doc_page_numer = -1    # Holds the page number as printed PDF
         self.img_xrefs = page.get_images()  # Holds refferances to all imageson the page
         self.abstract_start = False # Set to true iff the abstract starts in this page
         self.content_start = False  # Set to true iff table of content starts on page
         self.is_end = False         # Set to true iff page is the end of a section denonted by _oOo_ 
+        self.logs = []              # Contains a list of log lessages
+
+
+        
+        self.pre_fig = []  # Useful for finding correct drawing to correspond to caption
 
         txt = self.textpage.extractText(sort=True)
         # Find chunck instead of blocks becuase this has more reliable whitesapce behavior
         chunks = txt.replace("\n ","\n").split("\n\n")
         self.raw_txt = ""
-        for chunk in chunks:
+        for i,chunk in enumerate(chunks):
             chunk = ' '.join(chunk.split()).strip()
             if chunk == ABSTRACT_START_TXT:
                 # Page contains the start of the abstract, flag accordingly
@@ -61,9 +69,12 @@ class PageData():
             elif chunk == END_TXT:
                 self.is_end = True
                 self.completed = self.abstract_start
-            if chunk.startswith(FIG_TXT): # Whole Chunk will be the figure caption
+            elif chunk.isupper():
+                self.headdings.append(chunk)
+                self.sections.append(len(self.raw_txt))
+            elif chunk.startswith(FIG_TXT): # Whole Chunk will be the figure caption
                 self.fig_capts.append(chunk)
-                continue
+                self.pre_fig.append(chunks[i-1]) if i != 0 else self.pre_fig.append("__TOP__")
             elif chunk.startswith(TAB_TXT): # Whole chunk will be table cpation
                 self.table_capts.append(chunk)
             if(not chunk.isspace()):
@@ -76,8 +87,9 @@ class PageData():
             self.raw_txt = f"--- PDF {page_index+1} DOC {pg_no} ---\n" + tmp
         else:
             self.raw_txt = f"--- PDF {page_index+1} DOC ___ ---\n" + tmp
-            
 
+    def has_figs(self)->bool:
+        return len(self.fig_capts) > 0
         
 # Used for testing
 if __name__ == "__main__":
@@ -88,8 +100,13 @@ if __name__ == "__main__":
     page_no = int(argv[2])
 
     with fitz.open(file) as doc:
+        _time = timer()
         data = PageData(doc[page_no], page_no)
-        print(data.raw_txt)
+        _time = timer() - _time
+        # print(data.raw_txt)
         print(f"Images:\n{data.fig_capts}")
-        print(f"image xrefs: {len(data.img_xrefs)}")
+        # print(f"image xrefs: {len(data.img_xrefs)}")
+        # print(f"headdings: {data.headdings}")
+        # print(f"secion txt\n {data.get_section_txt()}")
+        print(f"Time: {_time}")
 
