@@ -78,20 +78,48 @@ def get_page1_info(page:fitz.Page)->Tuple[str, str]:
 # Returns abstract text and table of content dictionary - excess or an error message if no abstract is found
 # Throws and `ExtractionError` if no abstract can be found on the given page
 # === WIP: hard to accuratly parallise due to finge cases where abstract and table of contents span over multipe pages
-def get_page2_info(page:fitz.Page):
+def get_abstract_and_contents(doc:fitz.Document, start_pt = 2):
 
-    textpage = page.get_textpage()
+    abstract_pgs = 1 # Stores the number of pages used by abstract and contents section
+    content_pgs = 1 # Number of pages used by table of content
+
+    # First page in list should contain abstract
+    textpage0 = doc[2].get_textpage()
+    textpage1 = doc[3].get_textpage()
+
+    # === Abtract ===
+    abstract_txt = "Not found."
+   
     # Use these two rects to locate the baounding box of the abstrct
-    abstract_start = page.search_for(ABSTRACT_START_TXT, textpage=textpage) # Directly above abstrct
-    abstract_end = page.search_for(END_TXT, textpage=textpage)              # Riectly below abstrct
-
-    # Chack that abstract start and end blocks were indedd found
+    abstract_start = doc[start_pt].search_for(ABSTRACT_START_TXT, textpage=textpage0) # Directly above abstrct
+    # Chack that abstract start was found
     if(len(abstract_start) == 0 or len(abstract_end) == 0):
-        raise ExtractionError("Abstract could not be found", 2)
+        raise ExtractionError("Abstract start could not be found", 2)
     
-    # Extrat apstract from page based on the rect location determined
-    abstract_rect = Rect(0, abstract_start[0][3], X_MAX, abstract_end[0][1])
-    abstract_txt = page.get_textbox(abstract_rect).strip()
+    # Find abstract end box: this may span over two pages
+    abstract_end = doc[0].search_for(END_TXT, textpage=textpage0)             
+    # Chack that abstract end was found, set to two pages if not
+    if(len(abstract_end) == 0):
+        # Abstract spans two pages
+        abstract_end = doc[1].search_for(END_TXT, textpage=textpage1)  
+        abstract_pgs = 2
+
+        # It assumed that an abstract will span a maximum of two pages
+        if(len(abstract_end) == 0):
+            raise ExtractionError("Abstract end could not be found", 3)
+        
+        # Extrat abstaxt over two pages
+        abstract_rect0 = Rect(0, abstract_start[0][3], X_MAX, Y_MAX)
+        abstract_rect1 = Rect(0, 0, X_MAX, abstract_end[0][1])
+
+        abstract_txt = doc[2].get_textbox(abstract_rect0).strip()+doc[3].get_textbox(abstract_rect1).strip()
+    else:
+        # Extrat apstract from page based on the rect location determined
+        abstract_rect = Rect(0, abstract_start[0][3], X_MAX, abstract_end[0][1])
+        abstract_txt = doc[2].get_textbox(abstract_rect).strip()
+
+
+    # === Table of contents...
 
     return abstract_txt
 

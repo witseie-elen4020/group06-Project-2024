@@ -62,9 +62,6 @@ with fitz.open(file) as doc:
     abstract_rect = Rect(0, abstract_start[0][3], X_MAX, abstract_end[0][1])
     abstract_txt = page.get_textbox(abstract_rect).strip()
 
-    print("Abstract")
-    print(abstract_txt, "\n")
-
 
     # === Page 4 === 
     # Get table of contents
