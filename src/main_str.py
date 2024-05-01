@@ -221,7 +221,7 @@ if __name__ == "__main__":
 
     _time = MPI.Wtime()
     # Gather extracted text from all processes
-    all_extracted_text = comm.gather(extracted_text, root=0)
+    extracted_text = comm.gather(extracted_text, root=0)
     contents = comm.gather(contents, root=0)
     numbers = comm.gather(numbers, root=0)
     jobs = comm.gather(jobs, root=0)
@@ -238,13 +238,17 @@ if __name__ == "__main__":
         if not os.path.exists(img_save_path):
             os.makedirs(img_save_path)
 
+        # There is no benefit in doing text in a seperatre job, it is too large to send and faster to do here
+        with open(os.path.join(save_path, str_job.TEXT_FILE), "w") as file:
+            file.write("".join(extracted_text))
+
         # Great a list of job strings
         # Jobs that always need to be done
         job_pool = []
         try:
             [info, content, body] = "".join(contents).split(GLOBAL_BREAK)[0:3]
-            job_pool = job_pool +  [str_job.InfoJob(info, MAJOR_BREAK, MINOR_BREAK)]
-            print("good")
+            job_pool = job_pool +  [str_job.InfoJob(info, MAJOR_BREAK, MINOR_BREAK), str_job.ContentJob(content, MAJOR_BREAK, MINOR_BREAK)]
+            print("ggg")
         except:
             pass
         genral_jobs = str_job.get_jobs("".join(jobs).strip(MAJOR_BREAK).split(MAJOR_BREAK))
