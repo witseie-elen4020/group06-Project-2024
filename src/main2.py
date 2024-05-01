@@ -37,40 +37,43 @@ if __name__ == "__main__":
     pdf_file = argv[1]  # Get the path to the PDF file from command-line arguments
     output_txt = argv[2]  # Get the path to the PDF file from command-line arguments
 
-    if rank == 0:
-        print(f"Number of processes: {size}")  # Print the total number of processes from rank 0
+    # if rank == 0:
+    #     print(f"Number of processes: {size}")  # Print the total number of processes from rank 0
     # Distribute pages among processes
-
+    pool = []
+    pool_int = len(pool)
     pool = [1,2,3,4,5,6,7,8] if rank == 0 else None
+    
+
     busy = True
-    has_job = False
-    job_id = -1
-    worker_rank = rank
-
-    # if busy:
-    #     if rank != 0:
-    #         # Send job reqest
-    #         worker_rank = rank
-    #         comm.send(worker_rank,0,1)
-    #         job_id = comm.recv(job_id, 0, 2)
-    #         print("Got job")
-
-    #     else:
-    #         #worker_rank = comm.Recv(worker_rank, tag=1)
-    #         print(f"request from workker {worker_rank}")
-    #         pool.pop()
-    #         if len(pool) == 0:
-    #             busy = False
-        
-    #     if busy==False:
-    #         comm.bcast(busy, 0)
+    _time = MPI.Wtime()
+    if rank == 0:
+        pool_len = len(pool)
+        for __ in range(pool_len+size-1):
+            req = comm.irecv(tag=10)
+            gg = req.wait()
+            p = pool.pop() if len(pool) > 0 else -1 
+            req = comm.isend(p, dest=gg, tag=11)
+        busy = False
+        _time = MPI.Wtime()-_time
+        print("comm time", _time)
+    else:
+        while busy:
+            print("hmmm")
+            req = comm.isend(rank, dest=0, tag=10)
+            jj = comm.irecv(source=0, tag=11)
+            gg = jj.wait()
+            print("gottem", gg, "in ", rank)
+            for i in range(10000*gg):
+                j = i * 20
+            busy = gg != -1
 
 
 
     _time = MPI.Wtime()
     page_range = list(distribute_pages(pdf_file, size))
     _time = MPI.Wtime()-_time
-    print("Distibution time:", _time)
+    #print("Distibution time:", _time)
 
     # Each process opens the PDF and extracts its pages
     _time = MPI.Wtime()
@@ -83,30 +86,18 @@ if __name__ == "__main__":
             page_datas.append(page_data)
             extracted_text += page_data.raw_txt  # Append text content of the page
     _time = MPI.Wtime()-_time
-    print("Extraction Time:", _time)
+    #print("Extraction Time:", _time)
 
     # # # pd = {}
     
     _time = MPI.Wtime()
-    # Send page datas to main threa
-    if rank != 0:
-        print("Im gonna do a thing", rank)
-        comm.send(page_datas,0,tag=1)
-
-    if rank==0:
-        for _ in range(1,size):
-            data = comm.recv()
-            page_datas.append(data)
-
-        _time = MPI.Wtime()-_time
-        print("Send Time:", _time)
 
 
     _time = MPI.Wtime()
     # Gather extracted text from all processes
     all_extracted_text = comm.gather(extracted_text, root=0)
     _time = MPI.Wtime()-_time
-    print("Gather Time:", _time, "for rank ", rank)
+    #print("Gather Time:", _time, "for rank ", rank)
     if rank == 0:
         
         _time = timer()

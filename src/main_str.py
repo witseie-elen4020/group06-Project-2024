@@ -1,7 +1,7 @@
 # Ths script conatins and alternative apporche to parallele extraction which better leverages the features of MPI
 # Instead of extrcating page data all information is sirted and stored in a set of strings.
 # This allows the main thread to easilty gather ordered data and perform operations accordingly
-
+import os
 
 from mpi4py import MPI  # Import MPI module for parallel computing
 import fitz  # Import fitz module for PDF processing
@@ -12,6 +12,7 @@ from page_data import PageData  # Import the PageData class
 from timeit import default_timer as timer # form benchmarking
 from extract_error import ExtractionError, ExtractionNote
 import str_job
+from doc_data import DocData
 
 
 # ====================
@@ -43,6 +44,10 @@ END_TXT = "_oOo_"
 X_MAX = 595
 Y_MAX = 842
 
+# Communication tags
+JOB_REQUEST = 11
+JOB_DISPATCH = 22
+
 # ================
 
 # Function to distribute pages evenly across processes
@@ -65,8 +70,6 @@ def distribute_pages(pdf_file, num_processes):
         start_page = end_page + 1
 
 def extract_page_info(page:fitz.Page, page_index:int):
-
-   
 
     raw_txt = ""        # Holds all text from page (including figure captions)
     contents = ""       # Holds section headdings and text, (without figure captions)
@@ -103,8 +106,8 @@ def extract_page_info(page:fitz.Page, page_index:int):
             hide_flag = True
         if chunk != "":
             raw_txt += chunk + '\n'
-        if not hide_flag:
-            contents += chunk + '\n'
+            if not hide_flag:
+                contents += chunk + '\n'
         # Reset hide flag to false
         hide_flag = False
         
@@ -185,7 +188,7 @@ if __name__ == "__main__":
         exit()  # Exit the program
 
     pdf_file = argv[1]  # Get the path to the PDF file from command-line arguments
-    output_txt = argv[2]  # Get the path to the PDF file from command-line arguments
+    output_dir = argv[2]  # Get the path to the PDF file from command-line arguments
 
     if rank == 0:
         print(f"Number of processes: {size}")  # Print the total number of processes from rank 0
@@ -225,14 +228,61 @@ if __name__ == "__main__":
     log = comm.gather(log)
     _time = MPI.Wtime()-_time
     print("Gather Time:", _time, "for rank ", rank)
-    if rank == 0:
-        _time = timer()
-        # Write the gathered text to the output file
-        with open(output_txt, 'w') as f:
-            for text in all_extracted_text:
-                f.write(text)
-        _time = timer()-_time
-        print(_time)
 
-        print(f"Jobs\n{jobs}")
-        print(f"log\n{len(jobs)}")
+    # Now creat a set of save jobs
+    save_jobs = []
+    save_path = os.path.join(output_dir, pdf_file)
+    if rank == 0:
+        # Make save folders
+        img_save_path = os.path.join(save_path,str_job.IMG_DIR)
+        if not os.path.exists(img_save_path):
+            os.makedirs(img_save_path)
+
+        # Great a list of job strings
+        job_pool = []
+        genral_jobs = str_job.get_jobs("".join(jobs).strip(MAJOR_BREAK).split(MAJOR_BREAK))
+        job_pool += genral_jobs
+
+    
+    # Asycn manager worker system
+    _time = MPI.Wtime()
+    busy = True
+    if rank == 0:
+        pool_len = len(job_pool)
+        for __ in range(pool_len+size-1):
+            req = comm.irecv(tag=JOB_REQUEST)
+            worker_rank = req.wait()
+            job = job_pool.pop() if len(job_pool) > 0 else None
+            req = comm.isend(job, dest=worker_rank, tag=JOB_DISPATCH)
+        busy = False
+        _time = MPI.Wtime()-_time
+        print("job time", _time)
+    else:
+        while busy:
+            # Request a job from manager thread
+            req = comm.isend(rank, dest=0, tag=JOB_REQUEST)
+            # Recive job request
+            job_req = comm.irecv(source=0, tag=JOB_DISPATCH)
+            job = job_req.wait()
+            if job == None:
+                busy = False
+                break
+            else:
+                job.do_job(doc, pdf_file, save_path)
+
+
+    
+
+        
+
+    #if rank == 0:
+        # _time = timer()
+        # # Write the gathered text to the output file
+        # with open(output_txt, 'w') as f:
+        #     for text in all_extracted_text:
+        #         f.write(text)
+        # _time = timer()-_time
+        # print(_time)
+
+        # contents = "".join(contents)
+        # #print(contents)
