@@ -23,7 +23,7 @@ TEXT_TAG = "TXT"
 TEXT_FILE = "text.txt"
 CONTENT_TAG = "CON"
 CONTENT_DIR = "Sections"
-CONTENT_FILE = "content.txt"
+CONTENT_FILE = "content.json"
 # Docuemnt info
 INFO_TAG = "INF"
 INFO_FILE = "info.json"
@@ -77,6 +77,8 @@ class ImgJob:
         image = Image.open(io.BytesIO(image_bytes))
         image.save(save_path, pnginfo=metadata)
 
+        return ""
+
 # Extracts and save genral page information such as title and author
 class InfoJob:
     def __init__(self, info_str:str, maj_split:str, min_split:str) -> None:
@@ -88,42 +90,45 @@ class InfoJob:
     def do_job(self, doc:fitz.Document, file_name:str, save_path):
         # Split fist docuemnt section into is subsection
         secs = self.info.split(self.maj)
+        try:
+            # The final section should be the abstract
+            [title, abstract] = secs[-1].replace(self.min,"").split("ABSTRACT")
+            
+            abstract = abstract.strip("ABSTRACT")
 
-        # The final section should be the abstract
-        [title, abstract] = secs[-1].replace(self.min,"").split("ABSTRACT")
-        
-        abstract = abstract.strip("ABSTRACT")
+            offset = 0
+            if title == "" or  title.isspace():
+                title = secs[-2].strip(self.min)
+                offset = 1
 
-        offset = 0
-        if title == "" or  title.isspace():
-            title = secs[-2].strip(self.min)
-            offset = 1
+            # The penultimate section cantaisn the date
+            date = secs[-(2+offset)].strip().rsplit('\n', 1)[-1]
 
-        # The penultimate section cantaisn the date
-        date = secs[-(2+offset)].strip().rsplit('\n', 1)[-1]
+            # The second section contains the authors, the exact splitting is inconsitent here so third section is also included
+            authors = "".join(secs[1:3]).split(self.min,2)[1].split("\n",1)[0].replace(" AND", ",")
 
-        # The second section contains the authors, the exact splitting is inconsitent here so third section is also included
-        authors = "".join(secs[1:3]).split(self.min,2)[1].split("\n",1)[0].replace(" AND", ",")
+            with open(os.path.join(save_path, INFO_FILE), "w") as file:
+                info = {
+                    "Title": title,
+                    "Authors": authors,
+                    "Date": date,
+                    "Abstract": abstract,
+                    "File": file_name
+                }
+                json.dump(info, file)
+            return ""
+        except:
+            return "ERROR! Page infromation not found"
 
-        with open(os.path.join(save_path, INFO_FILE), "w") as file:
-            info = {
-                "Title": title,
-                "Authors": authors,
-                "Date": date,
-                "Abstract": abstract,
-                "File": file_name
-            }
-            json.dump(info, file)
+    # Saves raw text into a single file
+    class TxtJob:
+        def __init__(self, txt:str) -> None:
+            self.txt = txt.strip(TEXT_TAG+SPLIT_STR)
 
-# Saves raw text into a single file
-class TxtJob:
-    def __init__(self, txt:str) -> None:
-        self.txt = txt.strip(TEXT_TAG+SPLIT_STR)
+        def do_job(self, doc:fitz.Document, file_name:str, save_path):
 
-    def do_job(self, doc:fitz.Document, file_name:str, save_path):
-
-        with open(os.path.join(save_path, TEXT_FILE), "w") as file:
-            file.write(self.txt)
+            with open(os.path.join(save_path, TEXT_FILE), "w") as file:
+                file.write(self.txt)
 
 # Save table of content and each section as a sub-directory
 class ContentJob:
@@ -134,9 +139,28 @@ class ContentJob:
 
     def do_job(self, doc:fitz.Document, file_name:str, save_path):
 
-        print(self.content_str)
-
-        # with open(os.path.join(save_path, TEXT_FILE), "w") as file:
-        #     file.write(self.txt)
+        try:
         
+            # Fist section of contents is the title
+           # [title, self.content_str] = title = self.content_str.split(self.maj, 1)
+
+            main_secs = self.content_str.split("Page", 1)[1].strip().split(self.maj)
+            content = {}
+            for sec in main_secs:
+                if sec == "":
+                    continue
+                try:
+                    [headding, remainder] = sec.split(self.min,1)
+                except:
+                    [headding, remainder] = sec.split('\n',1)
+                number = remainder.split('\n',1)[0]
+                content[headding] = number
+                
+
+            with open(os.path.join(save_path, CONTENT_FILE), "w") as file:
+                json.dump(content, file)
+
+            return ""
+        except:
+            return "ERROR! Contents not found\n"      
         

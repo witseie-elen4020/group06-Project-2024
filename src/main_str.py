@@ -135,14 +135,13 @@ def extract_page_info(page:fitz.Page, page_index:int):
             if capt_count == 0:
                 raise ExtractionNote(f"Ignored {xref_count} uncaptioned images", page_index)
             elif capt_count == 1:
-                raise ExtractionError(f"Could not find image with caption: '{fig_capts[0][:10]}...' ", page_index)
+                raise ExtractionError(f"Could not find image with caption: '{fig_capts[0][:20]}...' ", page_index)
             
             # More than one figure, detemine which images are captioned
             good_xrefs = []
             good_capts = []
             # The bounding boxes of all page captions 
             capt_bbs = [page.search_for(capt, textpage=textpage)[0] for capt in fig_capts]
-            print(f"{capt_count} pats and {xref_count} eros ")
             for capt_i, bb in enumerate (capt_bbs):
                 
                 # Bounds of figure location
@@ -152,10 +151,10 @@ def extract_page_info(page:fitz.Page, page_index:int):
                 _capt_images = [xref for xref in img_xrefs if (xref[2] > ymin and xref[2] < ymax)]
 
                 if(len(_capt_images) == 0):
-                    log += str(ExtractionError(f"Could not find image with caption: '{fig_capts[capt_i][:10]}...' ", page_index))+'\n'
+                    log += str(ExtractionError(f"Could not find image with caption: '{fig_capts[capt_i][:20]}...' ", page_index))+'\n'
                     continue
                 elif(len(_capt_images) > 1):
-                    log += str(ExtractionNote(f"Ignored {len(_capt_images -1 )} uncaptioned images above figure caption {fig_capts[capt_i][:10]}...'", page_index))+'\n'
+                    log += str(ExtractionNote(f"Ignored {len(_capt_images -1 )} uncaptioned images above figure caption {fig_capts[capt_i][:20]}...'", page_index))+'\n'
                 
                 # Assume valid image to be the lowest one
                 good_capts.append(fig_capts[capt_i])
@@ -192,14 +191,14 @@ if __name__ == "__main__":
 
     if rank == 0:
         print(f"Number of processes: {size}")  # Print the total number of processes from rank 0
+
+    _time =  MPI.Wtime() if rank == 0 else None
     # Distribute pages among processes
-    _time = MPI.Wtime()
     page_range = list(distribute_pages(pdf_file, size))
     # _time = MPI.Wtime()-_time
     # print("Distibution time:", _time)
 
     # Each process opens the PDF and extracts its pages
-    _time = MPI.Wtime()
     start_page, end_page = page_range[rank]
     extracted_text = ""  # Initialize a string to store extracted text
     contents = ""       # Holds section headdings and text, (without figure captions)
@@ -216,18 +215,22 @@ if __name__ == "__main__":
         numbers += _numbs
         jobs += _jobs
         log += _log
-    _time = MPI.Wtime()-_time
-    print("Extraction Time:", _time)
+    
+    if rank == 0:
+        _time = MPI.Wtime()-_time
+        print("Extraction Time:", _time)
 
-    _time = MPI.Wtime()
+    _time =  MPI.Wtime() if rank == 0 else None
     # Gather extracted text from all processes
     extracted_text = comm.gather(extracted_text, root=0)
     contents = comm.gather(contents, root=0)
     numbers = comm.gather(numbers, root=0)
     jobs = comm.gather(jobs, root=0)
     log = comm.gather(log)
-    _time = MPI.Wtime()-_time
-    print("Gather Time:", _time, "for rank ", rank)
+
+    if rank == 0:
+        _time = MPI.Wtime()-_time
+        print("Gather Time:", _time)
 
     # Now creat a set of save jobs
     save_jobs = []
@@ -248,7 +251,6 @@ if __name__ == "__main__":
         try:
             [info, content, body] = "".join(contents).split(GLOBAL_BREAK)[0:3]
             job_pool = job_pool +  [str_job.InfoJob(info, MAJOR_BREAK, MINOR_BREAK), str_job.ContentJob(content, MAJOR_BREAK, MINOR_BREAK)]
-            print("ggg")
         except:
             pass
         genral_jobs = str_job.get_jobs("".join(jobs).strip(MAJOR_BREAK).split(MAJOR_BREAK))
@@ -259,6 +261,7 @@ if __name__ == "__main__":
     _time = MPI.Wtime()
     busy = True
     if rank == 0:
+        log = "".join(log)
         pool_len = len(job_pool)
         for __ in range(pool_len+size-1):
             req = comm.irecv(tag=JOB_REQUEST)
@@ -267,8 +270,9 @@ if __name__ == "__main__":
             req = comm.isend(job, dest=worker_rank, tag=JOB_DISPATCH)
         busy = False
         _time = MPI.Wtime()-_time
-        print("job time", _time)
+        print("Job Time:", _time)
     else:
+        log = ""
         while busy:
             # Request a job from manager thread
             req = comm.isend(rank, dest=0, tag=JOB_REQUEST)
@@ -279,21 +283,9 @@ if __name__ == "__main__":
                 busy = False
                 break
             else:
-                job.do_job(doc, pdf_file, save_path)
+                log += job.do_job(doc, pdf_file, save_path)
 
-
-    
-
-        
-
-    #if rank == 0:
-        # _time = timer()
-        # # Write the gathered text to the output file
-        # with open(output_txt, 'w') as f:
-        #     for text in all_extracted_text:
-        #         f.write(text)
-        # _time = timer()-_time
-        # print(_time)
-
-        # contents = "".join(contents)
-        # #print(contents)
+    log = comm.gather(log, root = 0)
+    if rank == 0:
+        with open(os.path.join(save_path, "log.txt"), "w") as file:
+            file.write("".join(log))
