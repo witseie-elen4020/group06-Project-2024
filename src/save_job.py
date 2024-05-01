@@ -93,12 +93,14 @@ if __name__ == "__main__":
         data = PageData(doc[page_no], page_no)
         doc_data = DocData(file, "TMP_TEST")
         _time = timer()
+        logs =[]
         if data.has_figs():
             save_job = ImgSaveJob(data, doc_data)
             logs = save_job.execute(doc)
         _time = timer() - _time
-        # print(data.raw_txt)
+        print(data.raw_txt)
         print(f"Logs:\n{logs}")
+        print(f"image xrefs: {len(data.img_xrefs)}")
         # print(f"image xrefs: {len(data.img_xrefs)}")
         # print(f"headdings: {data.headdings}")
         # print(f"secion txt\n {data.get_section_txt()}")

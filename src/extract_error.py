@@ -6,4 +6,13 @@ class ExtractionError(Exception):
         super().__init__(msg)
 
     def __str__(self) -> str:
-        return super().__str__() + f" On Page {self.page_index}"
+        return "ERROR! " + super().__str__() + f" On Page {self.page_index}"
+    
+class ExtractionNote(Exception): # Non critcal exception
+    def __init__(self, msg:str, page_index:int) -> None:
+        self.page_index = page_index
+        super().__init__(msg)
+
+    def __str__(self) -> str:
+        return "Note. " + super().__str__() + f" on Page {self.page_index}"
+    

@@ -35,7 +35,7 @@ class PageData():
     def __init__(self, page:fitz.Page, page_index:int) -> None:
 
         # Get textpage for faster data extraction
-        self.textpage = page.get_textpage()
+        textpage = page.get_textpage()
         self.page_index = page_index
 
         # initalis variables
@@ -55,7 +55,7 @@ class PageData():
         
         self.pre_fig = []  # Useful for finding correct drawing to correspond to caption
 
-        txt = self.textpage.extractText(sort=True)
+        txt = textpage.extractText(sort=True)
         # Find chunck instead of blocks becuase this has more reliable whitesapce behavior
         chunks = txt.replace("\n ","\n").split("\n\n")
         self.raw_txt = ""
@@ -77,16 +77,16 @@ class PageData():
                 self.pre_fig.append(chunks[i-1]) if i != 0 else self.pre_fig.append("__TOP__")
             elif chunk.startswith(TAB_TXT): # Whole chunk will be table cpation
                 self.table_capts.append(chunk)
-            if(not chunk.isspace()):
+            if chunk != "":
                 self.raw_txt += chunk + '\n'
         
         # Find printed page number (if present)
-        [tmp, pg_no] = self.raw_txt.strip().rsplit('\n',1)
-        if pg_no.isnumeric():
+        try:
+            [tmp, pg_no] = self.raw_txt.strip().rsplit('\n',1)
             self.doc_page_numer == int(pg_no)
-            self.raw_txt = f"--- PDF {page_index+1} DOC {pg_no} ---\n" + tmp
-        else:
-            self.raw_txt = f"--- PDF {page_index+1} DOC ___ ---\n" + tmp
+            self.raw_txt = f"\n--- PDF {page_index+1} DOC {pg_no} ---\n" + tmp
+        except:
+            self.raw_txt = f"\n--- PDF {page_index+1} DOC 0 ---\n" + self.raw_txt
 
     def has_figs(self)->bool:
         return len(self.fig_capts) > 0
@@ -105,7 +105,7 @@ if __name__ == "__main__":
         _time = timer() - _time
         # print(data.raw_txt)
         print(f"Images:\n{data.fig_capts}")
-        # print(f"image xrefs: {len(data.img_xrefs)}")
+        print(f"image xrefs: {len(data.img_xrefs)}")
         # print(f"headdings: {data.headdings}")
         # print(f"secion txt\n {data.get_section_txt()}")
         print(f"Time: {_time}")
