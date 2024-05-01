@@ -101,7 +101,7 @@ def extract_page_info(page:fitz.Page, page_index:int):
             hide_flag = True
         elif chunk.startswith(TAB_TXT) and 1==2: # Whole chunk will be table cpation
             assert(False)
-        elif chunk == END_TXT:
+        elif END_TXT in chunk:
             contents = contents + GLOBAL_BREAK
             hide_flag = True
         if chunk != "":
@@ -239,7 +239,14 @@ if __name__ == "__main__":
             os.makedirs(img_save_path)
 
         # Great a list of job strings
+        # Jobs that always need to be done
         job_pool = []
+        try:
+            [info, content, body] = "".join(contents).split(GLOBAL_BREAK)[0:3]
+            job_pool = job_pool +  [str_job.InfoJob(info, MAJOR_BREAK, MINOR_BREAK)]
+            print("good")
+        except:
+            pass
         genral_jobs = str_job.get_jobs("".join(jobs).strip(MAJOR_BREAK).split(MAJOR_BREAK))
         job_pool += genral_jobs
 
