@@ -78,14 +78,10 @@ def extract_page_info(page:fitz.Page, page_index:int):
     figs_str = ""       # Stores all figure captions
     log = ""            # Holds a record of any error that may occure
 
-    run_on_job = ""        # Holds a job which may be split over multiple pages
-
     fig_capts = []     # Holds figure caption
     doc_pg_no = 0
 
     # Flags
-    roj_end = False # run on job ends on this page
-    roj_start = False # run on job start on this page
     hide_flag = False # Content should not be written to a section
 
     textpage = page.get_textpage()  # Use a textpage for faster text extraction 
@@ -182,32 +178,22 @@ def extract_page_info(page:fitz.Page, page_index:int):
 
 
 if __name__ == "__main__":
-    comm = MPI.COMM_WORLD  # Initialize MPI communicator
-    rank = comm.Get_rank()  # Get the rank of the current process
-    size = comm.Get_size()  # Get the total number of processes
 
-    if len(argv) != 3:  # Check if the correct number of command-line arguments is provided
-        if rank == 0:
-            print(f"Usage: {argv[0]} <pdf_file> <output_txt>")  # Print usage message from rank 0
+    if len(argv) != 3: 
+        print(f"Usage: {argv[0]} <pdf_file> <output_txt>")  # Print usage message from rank 0
         exit()  # Exit the program
 
     pdf_file = argv[1]  # Get the path to the PDF file from command-line arguments
     output_dir = argv[2]  # Get the path to the PDF file from command-line arguments
 
-    if rank == 0:
-        print(f"Number of processes: {size}")  # Print the total number of processes from rank 0
+    print(f"Number of processes: None (Serial)")  # Print the total number of processes from rank 0
 
-    _time =  MPI.Wtime() if rank == 0 else None
+    _time =  timer()
     # ==========
     # -- Begin extraction
-    _extract_time =  MPI.Wtime() if rank == 0 else None
-    # Distribute pages among processes
-    page_range = list(distribute_pages(pdf_file, size))
-    # _time = MPI.Wtime()-_time
-    # print("Distibution time:", _time)
+    _extract_time =  timer()
 
     # Each process opens the PDF and extracts its pages
-    start_page, end_page = page_range[rank]
     extracted_text = ""  # Initialize a string to store extracted text
     contents = ""       # Holds section headdings and text, (without figure captions)
     numbers = ""        # Holds information realting to document page numbers
@@ -217,8 +203,8 @@ if __name__ == "__main__":
     
 
     doc = fitz.open(pdf_file)
-    for page_number in range(start_page, end_page + 1):
-        [_txt, _cont, _numbs, _jobs, _figs_str, _log] = extract_page_info(doc[page_number], page_number)
+    for page_number,page in enumerate(doc):
+        [_txt, _cont, _numbs, _jobs, _figs_str, _log] = extract_page_info(page, page_number)
         extracted_text += _txt # Append text content of the page
         contents += _cont
         numbers += _numbs
@@ -226,96 +212,51 @@ if __name__ == "__main__":
         figs_str += _figs_str
         log += _log
 
-    # Gather extracted text from all processes
-    contents = comm.gather(contents, root=0)
-    jobs = comm.gather(jobs, root=0)
-    log = comm.gather(log)
 
-
-
-    if rank == 0:
-        _extract_time = MPI.Wtime()- _extract_time
+    _extract_time = timer()- _extract_time
 
     # Now creat a set of save jobs
-    _job_time =  MPI.Wtime() if rank == 0 else None
+    _job_time =  timer()
     save_jobs = []
     save_path = os.path.join(output_dir, os.path.splitext(os.path.basename(pdf_file))[0])
-    if rank == 0:
-        # Make save folders
-        img_save_path = os.path.join(save_path,str_job.IMG_DIR)
-        if not os.path.exists(img_save_path):
-            os.makedirs(img_save_path)
-
-        # There is no benefit in doing text in a seperatre job, it is too large to send and faster to do here
-        with open(os.path.join(save_path, str_job.TEXT_FILE), "w") as file:
-            file.write("".join(extracted_text))
-
-        # Great a list of job strings
-        # Jobs that always need to be done
-        job_pool = []
-        try:
-            [info, content, body] = "".join(contents).split(GLOBAL_BREAK)[0:3]
-            job_pool = job_pool +  [str_job.InfoJob(info, MAJOR_BREAK, MINOR_BREAK), str_job.ContentJob(content, MAJOR_BREAK, MINOR_BREAK)]
-        except:
-            pass
-        genral_jobs = str_job.get_jobs("".join(jobs).strip(MAJOR_BREAK).split(MAJOR_BREAK))
-        job_pool += genral_jobs
-
     
-    # Asycn manager worker system
-    busy = True
-    if rank == 0:
-        log = "".join(log)
-        pool_len = len(job_pool)
-        for __ in range(pool_len+size-1):
-            req = comm.irecv(tag=JOB_REQUEST)
-            worker_rank = req.wait()
-            job = job_pool.pop() if len(job_pool) > 0 else None
-            req = comm.isend(job, dest=worker_rank, tag=JOB_DISPATCH)
-        busy = False
-        _job_time = MPI.Wtime()-_job_time
-    else:
-        log = ""
-        while busy:
-            # Request a job from manager thread
-            req = comm.isend(rank, dest=0, tag=JOB_REQUEST)
-            # Recive job request
-            job_req = comm.irecv(source=0, tag=JOB_DISPATCH)
-            job = job_req.wait()
-            if job == None:
-                busy = False
-                break
-            else:
-                log += job.do_job(doc, pdf_file, save_path)
+    # Make save folders
+    img_save_path = os.path.join(save_path,str_job.IMG_DIR)
+    if not os.path.exists(img_save_path):
+        os.makedirs(img_save_path)
 
-    
-    # Some jobs doe not warrent being sent to seperate threads as they are fast but data heavey 
-    # Hance they are distributed using gather and addressed here
-    _fin_time =  MPI.Wtime() if rank == 0 else None
-    # Log containing all error that have occured, in thread zero so will only be reated when all jobs are compted
-    log = comm.gather(log, root = 0)
-    if rank == 0:
-        with open(os.path.join(save_path, "log.txt"), "w") as file:
-            file.write("".join(log))
+    # Great a list of job strings
+    # Jobs that always need to be done
+    job_pool = []
+    try:
+        [info, content, body] = "".join(contents).split(GLOBAL_BREAK)[0:3]
+        job_pool = job_pool +  [str_job.InfoJob(info, MAJOR_BREAK, MINOR_BREAK), str_job.ContentJob(content, MAJOR_BREAK, MINOR_BREAK)]
+    except:
+        pass
+    genral_jobs = str_job.get_jobs("".join(jobs).strip(MAJOR_BREAK).split(MAJOR_BREAK))
+    job_pool += genral_jobs
+
+    for job in job_pool:
+        log += job.do_job(doc, pdf_file, save_path)
+           
+    _job_time =  timer() - _job_time
+    _fin_time = timer()
+
+    # Log containing all error that have occured
+    with open(os.path.join(save_path, "log.txt"), "w") as file:
+        file.write("".join(log))
 
     # Save a list of all figure found 
-    img_save_rank = 1%size
-    figs_str = comm.gather(figs_str, root=img_save_rank)
-    if rank == img_save_rank:
-        capts = "".join(figs_str)
-        with open(os.path.join(save_path, str_job.IMG_FILE), "w") as file:
-            file.write(capts)
-
-    txt_save_rank = 2%size
-    extracted_text = comm.gather(extracted_text, root=0)
+    capts = "".join(figs_str)
+    with open(os.path.join(save_path, str_job.IMG_FILE), "w") as file:
+        file.write(capts)
+        
+    # There is no benefit in doing text in a seperatre job
     with open(os.path.join(save_path, str_job.TEXT_FILE), "w") as file:
         file.write("".join(extracted_text))
 
-
-comm.barrier()
-if rank == 0:
-    _fin_time = MPI.Wtime()-_fin_time
-    _time = MPI.Wtime()-_time
+    _fin_time = timer()-_fin_time
+    _time = timer()-_time
     print(f"Extraction Time: {_extract_time}")
     print(f"Job Time: {_job_time}")
     print(f"Finalization Time: {_fin_time}")

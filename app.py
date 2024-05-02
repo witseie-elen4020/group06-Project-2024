@@ -93,8 +93,10 @@ def main():
     print("=============\n")
     print(stdout)
     
+    # Change pdf file to be base path
+    pdf_path_base = os.path.splitext(os.path.basename(pdf_path))[0]
     # Extract information from the JSON file
-    json_file_path = os.path.join(output_dir, pdf_path, "info.json")
+    json_file_path = os.path.join(output_dir, pdf_path_base, "info.json")
     if os.path.exists(json_file_path):
         info_data = extract_info_from_json(json_file_path)
     else:
@@ -111,13 +113,13 @@ def main():
         elif choice == "3":
             print("\nAbstract:", info_data.get("Abstract", "Abstract not found"))
         elif choice == "4":
-            figures_directory = os.path.join(output_dir, pdf_path, "Figures")
+            figures_directory = os.path.join(output_dir, pdf_path_base, "Figures")
             print("\nTotal number of images extracted:", count_images(figures_directory))
             print_captions_in_directory(figures_directory)
         elif choice == "5":
             print("\nFile Location:", info_data.get("File", "File location not found"))
         elif choice == "6":
-            view_logs(os.path.join(output_dir, pdf_path))
+            view_logs(os.path.join(output_dir, pdf_path_base))
         elif choice == "7":
             print("Exiting...")
             break
