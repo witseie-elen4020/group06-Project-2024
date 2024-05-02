@@ -106,7 +106,7 @@ def extract_page_info(page:fitz.Page, page_index:int):
             hide_flag = True
         if chunk != "":
             raw_txt += chunk + '\n'
-            if not hide_flag:
+            if page_index <= MAX_CONTENT and not hide_flag:
                 contents += chunk + '\n'
         # Reset hide flag to false
         hide_flag = False
