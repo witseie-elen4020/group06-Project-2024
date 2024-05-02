@@ -14,6 +14,7 @@ def get_file_path():
     return input("Please enter the path to your PDF file: ")
 
 def run_backend_program(pdf_path, output_dir):
+    # Adjust the execution command to use mpiexec
     process = subprocess.Popen(["mpiexec", "-n", "2", "python", "src/main_str.py", pdf_path, output_dir], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     stdout, stderr = process.communicate()
     return stdout, stderr
@@ -29,13 +30,25 @@ def display_options():
     print("1. View Report Title")
     print("2. View Report Authors")
     print("3. View Abstract")
-    print("4. Exit")
+    print("4. View File Location")
+    print("5. View Logs")
+    print("6. Exit")
+
+def view_logs(pdf_directory):
+    logs_path = os.path.join(pdf_directory, "log.txt")
+    if os.path.exists(logs_path):
+        with open(logs_path, "r") as file:
+            print("\n=================")
+            print("Logs from logs.txt")
+            print("=================\n")
+            print(file.read())
+    else:
+        print("Logs file not found.")
 
 def main():
     welcome_message()
     pdf_path = get_file_path()
     stdout, stderr = run_backend_program(pdf_path, output_dir)
-    
     # Print the output of the backend program
     print("\n=============")
     print("Script Output")
@@ -52,18 +65,22 @@ def main():
 
     while True:
         display_options()
-        choice = input("Enter your choice (1-5): ")
+        choice = input("Enter your choice (1-6): ")
         if choice == "1":
-            print("\nTitle:", info_data.get("Title", "Title not found"))
+            print("Title:", info_data.get("Title", "Title not found"))
         elif choice == "2":
-            print("\nAuthors:", info_data.get("Authors", "Authors not found"))
+            print("Authors:", info_data.get("Authors", "Authors not found"))
         elif choice == "3":
-            print("\nAbstract:", info_data.get("Abstract", "Abstract not found"))
+            print("Abstract:", info_data.get("Abstract", "Abstract not found"))
         elif choice == "4":
+            print("File Location:", info_data.get("File", "File location not found"))
+        elif choice == "5":
+            view_logs(os.path.join(output_dir, pdf_path))
+        elif choice == "6":
             print("Exiting...")
             break
         else:
-            print("Invalid choice. Please enter a number between 1 and 5.")
+            print("Invalid choice. Please enter a number between 1 and 6.")
 
 if __name__ == "__main__":
     main()
