@@ -32,18 +32,26 @@ def display_options():
     print("3. View Abstract")
     print("4. View File Location")
     print("5. View Logs")
-    print("6. Exit")
+    print("6. Total Number of Images Extracted")
+    print("7. Exit")
 
 def view_logs(pdf_directory):
     logs_path = os.path.join(pdf_directory, "log.txt")
     if os.path.exists(logs_path):
         with open(logs_path, "r") as file:
             print("\n=================")
-            print("Logs from logs.txt")
+            print("Logs from log.txt")
             print("=================\n")
             print(file.read())
     else:
         print("Logs file not found.")
+
+def count_images(figures_directory):
+    images_count = 0
+    if os.path.exists(figures_directory):
+        for root, dirs, files in os.walk(figures_directory):
+            images_count += len(files)
+    return images_count
 
 def main():
     welcome_message()
@@ -65,22 +73,25 @@ def main():
 
     while True:
         display_options()
-        choice = input("Enter your choice (1-6): ")
+        choice = input("Enter your choice (1-7): ")
         if choice == "1":
-            print("Title:", info_data.get("Title", "Title not found"))
+            print("\nTitle:", info_data.get("Title", "Title not found"))
         elif choice == "2":
-            print("Authors:", info_data.get("Authors", "Authors not found"))
+            print("\nAuthors:", info_data.get("Authors", "Authors not found"))
         elif choice == "3":
-            print("Abstract:", info_data.get("Abstract", "Abstract not found"))
+            print("\nAbstract:", info_data.get("Abstract", "Abstract not found"))
         elif choice == "4":
-            print("File Location:", info_data.get("File", "File location not found"))
+            print("\nFile Location:", info_data.get("File", "File location not found"))
         elif choice == "5":
             view_logs(os.path.join(output_dir, pdf_path))
         elif choice == "6":
+            figures_directory = os.path.join(output_dir, pdf_path, "Figures")
+            print("\nTotal number of images extracted:", count_images(figures_directory))
+        elif choice == "7":
             print("Exiting...")
             break
         else:
-            print("Invalid choice. Please enter a number between 1 and 6.")
+            print("Invalid choice. Please enter a number between 1 and 7.")
 
 if __name__ == "__main__":
     main()
