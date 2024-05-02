@@ -307,9 +307,10 @@ if __name__ == "__main__":
             file.write(capts)
 
     txt_save_rank = 2%size
-    extracted_text = comm.gather(extracted_text, root=0)
-    with open(os.path.join(save_path, str_job.TEXT_FILE), "w") as file:
-        file.write("".join(extracted_text))
+    extracted_text = comm.gather(extracted_text, root=txt_save_rank)
+    if rank ==   txt_save_rank:
+        with open(os.path.join(save_path, str_job.TEXT_FILE), "w") as file:
+            file.write("".join(extracted_text))
 
 
 comm.barrier()
