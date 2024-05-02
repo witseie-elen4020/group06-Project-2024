@@ -2,6 +2,7 @@ import os
 import subprocess
 import sys
 import json
+from PIL import Image
 
 output_dir = "output"
 
@@ -15,7 +16,7 @@ def get_file_path():
 
 def run_backend_program(pdf_path, output_dir):
     # Adjust the execution command to use mpiexec
-    process = subprocess.Popen(["mpiexec", "-n", "2", "python", "src/main_str.py", pdf_path, output_dir], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    process = subprocess.Popen(["mpiexec", "-n", "4", "python", "src/main_str.py", pdf_path, output_dir], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     stdout, stderr = process.communicate()
     return stdout, stderr
 
@@ -30,9 +31,9 @@ def display_options():
     print("1. View Report Title")
     print("2. View Report Authors")
     print("3. View Abstract")
-    print("4. View File Location")
-    print("5. View Logs")
-    print("6. Total Number of Images Extracted")
+    print("4. View Figures Captions")
+    print("5. View File Location")
+    print("6. View Logs")
     print("7. Exit")
 
 def view_logs(pdf_directory):
@@ -52,6 +53,35 @@ def count_images(figures_directory):
         for root, dirs, files in os.walk(figures_directory):
             images_count += len(files)
     return images_count
+
+def extract_caption(image_path):
+    with Image.open(image_path) as img:
+        metadata = img.info
+        caption = metadata.get("caption")
+    return caption
+
+def print_captions_in_directory(directory):
+    if not os.path.isdir(directory):
+        print("Invalid directory path.")
+        return
+
+    image_files = [f for f in os.listdir(directory) if f.endswith('.png')]
+    if not image_files:
+        print("No PNG images found in the directory.")
+        return
+
+    # Sort image files by their numeric part
+    image_files.sort(key=lambda x: int(x.split('_')[1].split('.')[0]))
+
+    for image_file in image_files:
+        image_path = os.path.join(directory, image_file)
+        caption = extract_caption(image_path)
+        print(f"\nImage: {image_file}")
+        if caption:
+            print("Caption:", caption)
+        else:
+            print("No caption found.")
+        print()
 
 def main():
     welcome_message()
@@ -81,17 +111,18 @@ def main():
         elif choice == "3":
             print("\nAbstract:", info_data.get("Abstract", "Abstract not found"))
         elif choice == "4":
-            print("\nFile Location:", info_data.get("File", "File location not found"))
-        elif choice == "5":
-            view_logs(os.path.join(output_dir, pdf_path))
-        elif choice == "6":
             figures_directory = os.path.join(output_dir, pdf_path, "Figures")
             print("\nTotal number of images extracted:", count_images(figures_directory))
+            print_captions_in_directory(figures_directory)
+        elif choice == "5":
+            print("\nFile Location:", info_data.get("File", "File location not found"))
+        elif choice == "6":
+            view_logs(os.path.join(output_dir, pdf_path))
         elif choice == "7":
             print("Exiting...")
             break
         else:
-            print("Invalid choice. Please enter a number between 1 and 7.")
+            print("Invalid choice. Please enter a number between 1 and 8.")
 
 if __name__ == "__main__":
     main()

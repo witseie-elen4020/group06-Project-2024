@@ -17,6 +17,8 @@ ROJ_SPLIT_E = "+|"   # second hald of run on job
 # Images 
 IMG_TAG = "IMG"
 IMG_DIR = "Figures"
+IMG_FILE = "figure_captions.txt"
+FIG_TXT = "Figure"
 
 # Content ans sections
 TEXT_TAG = "TXT"
@@ -27,6 +29,7 @@ CONTENT_FILE = "content.json"
 # Docuemnt info
 INFO_TAG = "INF"
 INFO_FILE = "info.json"
+
 
 # Returns an extraction job fo image retreval
 def get_img_job_str(caption:str, xref:int, pdf_pg:str, doc_pg:str):
@@ -57,16 +60,28 @@ class ImgJob:
         assert(tag == IMG_TAG)
     def do_job(self, doc:fitz.Document, file_name:str, save_path):
         # Split inamge catption into useful chuncks
+        log = ""
         [label, fig_number, caption] = (self.capt).split(" ", 2)
 
-        image_file_name = "fig_" + fig_number.strip(".").strip(":") + ".png"
+        # Ensure that figure number is numeric
+        fig_number = fig_number.strip(".").strip(":")
+        image_file_name = "fig_" + fig_number + ".png"
+        try:
+            fig_int = int(fig_number)
+        except:
+            try: 
+                fig_int = int(label.strip(FIG_TXT).strip(".").strip(":"))
+                fig_numaer = label.strip(FIG_TXT).strip(".").strip(":")
+            except:
+                log = f"Figure with number non-numeric number '{fig_number}' on pdf page {int(self.pdf_pg)+1}."
+
 
 
         metadata = PngInfo()
-        metadata.add_text("PDF page", str(self.pdf_pg))
-        metadata.add_text("DOC page", str(self.doc_pg))
+        metadata.add_text("PDF page", str(int(self.pdf_pg)+1))
+        metadata.add_text("DOC page", self.doc_pg)
         metadata.add_text("label", label)
-        metadata.add_text("number", fig_number.strip("."))
+        metadata.add_text("number", fig_number)
         metadata.add_text("caption", caption)
         metadata.add_text("document", file_name)
 
@@ -77,7 +92,7 @@ class ImgJob:
         image = Image.open(io.BytesIO(image_bytes))
         image.save(save_path, pnginfo=metadata)
 
-        return ""
+        return log
 
 # Extracts and save genral page information such as title and author
 class InfoJob:
@@ -106,15 +121,14 @@ class InfoJob:
 
             # The second section contains the authors, the exact splitting is inconsitent here so third section is also included
             authors = "".join(secs[1:3]).split(self.min,2)[1].split("\n",1)[0].replace(" AND", ",")
-
-            with open(os.path.join(save_path, INFO_FILE), "w") as file:
-                info = {
+            info = {
                     "Title": title,
                     "Authors": authors,
                     "Date": date,
                     "Abstract": abstract,
                     "File": file_name
                 }
+            with open(os.path.join(save_path, INFO_FILE), "w") as file:
                 json.dump(info, file)
             return ""
         except:
@@ -162,5 +176,5 @@ class ContentJob:
 
             return ""
         except:
-            return "ERROR! Contents not found\n"      
+            return "ERROR! Contents not found\n"  
         
