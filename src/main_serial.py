@@ -186,7 +186,7 @@ if __name__ == "__main__":
     pdf_files = argv[1:-1]  # Get the path to the PDF file from command-line arguments
     output_dir = argv[-1]  # Get the path to the PDF file from command-line arguments
 
-    print(f"Number of processes: None (Serial)")  # Print the total number of processes from rank 0
+    print(f"Number of processes: 1 (Serial)")  # Print the total number of processes from rank 0
 
     # Loop throuhg all pdf files provided 
     for pdf_file in pdf_files:
