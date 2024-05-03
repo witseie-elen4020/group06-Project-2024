@@ -204,4 +204,4 @@ myenv/
 data
 src/Data/
 *Data.db
-Output
+output/

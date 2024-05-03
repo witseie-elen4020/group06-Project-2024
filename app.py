@@ -3,6 +3,7 @@ import subprocess
 import sys
 import json
 from PIL import Image
+from pprint import pprint
 
 output_dir = "output"
 
@@ -32,9 +33,10 @@ def display_options():
     print("2. View Report Authors")
     print("3. View Abstract")
     print("4. View Figures Captions")
-    print("5. View File Location")
-    print("6. View Logs")
-    print("7. Exit")
+    print("5. View Figures Metadata")
+    print("6. View File Location")
+    print("7. View Logs")
+    print("8. Exit")
 
 def view_logs(pdf_directory):
     logs_path = os.path.join(pdf_directory, "log.txt")
@@ -83,6 +85,38 @@ def print_captions_in_directory(directory):
             print("No caption found.")
         print()
 
+from PIL import Image
+from pprint import pprint
+import os
+
+def print_image_metadata_in_directory(directory):
+    if not os.path.isdir(directory):
+        print("Invalid directory path.")
+        return
+
+    image_files = [f for f in os.listdir(directory) if f.endswith('.png')]
+
+    if not image_files:
+        print("No PNG images found in the directory.")
+        return
+
+    # Sort image files by their numeric part
+    image_files.sort(key=lambda x: int(x.split('_')[1].split('.')[0]))
+
+    for image_file in image_files:
+        image_path = os.path.join(directory, image_file)
+        metadata = extract_metadata(image_path)
+
+        print(f"\nImage: {image_file}")
+        pprint(metadata)
+        print()
+
+def extract_metadata(image_path):
+    with Image.open(image_path) as img:
+        metadata = img.info
+
+    return metadata
+    
 def main():
     welcome_message()
     pdf_path = get_file_path()
@@ -117,10 +151,13 @@ def main():
             print("\nTotal number of images extracted:", count_images(figures_directory))
             print_captions_in_directory(figures_directory)
         elif choice == "5":
-            print("\nFile Location:", info_data.get("File", "File location not found"))
+            figures_directory = os.path.join(output_dir, pdf_path_base, "Figures")
+            print_image_metadata_in_directory(figures_directory)
         elif choice == "6":
-            view_logs(os.path.join(output_dir, pdf_path_base))
+            print("\nFile Location:", info_data.get("File", "File location not found"))
         elif choice == "7":
+            view_logs(os.path.join(output_dir, pdf_path_base))
+        elif choice == "8":
             print("Exiting...")
             break
         else:
