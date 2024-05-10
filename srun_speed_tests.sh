@@ -25,7 +25,7 @@ srun --mpi=pmi2 python src/main_scatter.py data/390.pdf ttt >> results/slurm/sru
 
 
 serial_dir="results/serial_out"
-worker_dir="results/worder_out"
+worker_dir="results/worker_out"
 scatter_dir="results/scatter_out"
 output_txt="results/slurm/srun.txt"
 output_csv="results/slurm/srun.csv"

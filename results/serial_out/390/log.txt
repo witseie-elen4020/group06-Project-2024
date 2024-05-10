@@ -1,0 +1,2 @@
+Note. Ignored 3 uncaptioned images On PDF page 1
+ERROR! Could not find image with caption: 'Figure 3. Rose diagr...'  On PDF page 10

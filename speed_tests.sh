@@ -8,7 +8,7 @@
 # Define an array of array sizes
 
 serial_dir="results/serial_out"
-worker_dir="results/worder_out"
+worker_dir="results/worker_out"
 scatter_dir="results/scatter_out"
 output_txt="results/times.txt"
 output_csv="results/times.csv"
