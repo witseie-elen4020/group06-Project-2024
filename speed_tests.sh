@@ -46,6 +46,6 @@ for size in "${sizes[@]}"; do
 done
 
 # Write results to a csv for analysis
-python wrte2csv.py "$output_txt" "$output_csv"
+python write2csv.py "$output_txt" "$output_csv"
 
 echo "tests complete"

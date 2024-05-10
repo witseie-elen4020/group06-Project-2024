@@ -1,0 +1,13 @@
+Table 1. 40Ar-39Ar step-heating analytical results, sample BH89/3 biotite Temp Cum 40Ar/39Ar 37Ar/39Ar 36Ar/39Ar Vol. 39Ar %Rad. Ca/K 40Ar*/39Ar Age ± 1σ.d. (C) %39Ar		PDF_page:10		DOC_page:5
+Table 2. SHRIMP Th-U-Pb results from monazites, sample RCB2/72		PDF_page:11		DOC_page:6
+Table 3. Data 40Ar-39Ar, sample NN75/26 biotite		PDF_page:13		DOC_page:8
+Table 5. SHRIMP Th-U-Pb results from monazites, sample RCB2/112		PDF_page:15		DOC_page:10
+Table 6. Data 40Ar-39Ar, sample RCB2/112 biotite		PDF_page:16		DOC_page:11
+Table 7. Data 40Ar-39Ar, sample RCB2/4 biotite		PDF_page:18		DOC_page:13
+Table 8. Data 40Ar-39Ar, sample MJZC9/25 biotite Temp Cum 40Ar/ 39Ar 37Ar/ 39Ar 36Ar/ 39Ar Vol. 39Ar %Rad. Ca/K 40Ar*/ 39Ar Age ± 1σ.d. (C) %39Ar		PDF_page:19		DOC_page:14
+Table 9. Data 40Ar-39Ar, sample NN75/9 biotite Temp Cum 40Ar/ 39Ar 37Ar/ 39Ar 36Ar/ 39Ar Vol. 39Ar %Rad. Ca/K 40Ar*/ 39Ar Age ± 1σ.d. (C) %39Ar		PDF_page:20		DOC_page:15
+Table 10. Data 40Ar-39Ar, sample NCH1 biotite Temp Cum 40Ar/ 39Ar 37Ar/ 39Ar 36Ar/ 39Ar Vol. 39Ar %Rad. Ca/K 40Ar*/ 39Ar Age ± 1σ.d. (C) %39Ar		PDF_page:21		DOC_page:16
+Table 11. Data 40Ar-39Ar, sample KN1A biotite Temp Cum 40Ar/ 39Ar 37Ar/ 39Ar 36Ar/ 39Ar Vol. 39Ar %Rad. Ca/K 40Ar*/ 39Ar Age ± 1σ.d. (C) %39Ar		PDF_page:23		DOC_page:18
+Table 12. Data 40Ar-39Ar, sample KN1A muscovite Temp Cum 40Ar/ 39Ar 37Ar/ 39Ar 36Ar/ 39Ar Vol. 39Ar %Rad. Ca/K 40Ar*/ 39Ar Age ± 1σ.d. (C) %39Ar		PDF_page:24		DOC_page:19
+Table 13. Data 40Ar-39Ar, sample MUS1 microcline Temp Cum 40Ar/ 39Ar 37Ar/ 39Ar 36Ar/ 39Ar Vol. 39Ar %Rad. Ca/K 40Ar*/ 39Ar Age ± 1σ.d. (C) %39Ar		PDF_page:25		DOC_page:20
+Table 14. Summary of the ages obtained		PDF_page:27		DOC_page:22

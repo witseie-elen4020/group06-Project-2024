@@ -1,0 +1,2 @@
+srun: warning: can't run 2 processes on 4 nodes, setting nnodes to 2
+srun: warning: can't run 2 processes on 4 nodes, setting nnodes to 2
