@@ -3,7 +3,9 @@
 #SBATCH --output=parallel_4.txt
 #SBATCH --error=parallel_4_error.txt
 #SBATCH --cpus-per-task=1
-#SBATCH --ntasks=16
+#SBATCH --ntasks=4
+
+# https://stackoverflow.com/questions/31848608/slurms-srun-slower-than-mpirun
 
 export SLURM_CPU_BIND=None
 
@@ -23,20 +25,7 @@ rm -rf $serial__dir
 rm -rf $worker_dir
 rm -rf $scatter_dir
 
-exec srun --unbuffered --mpi=pmi2 /usr/bin/python3 src/main_str.py data/390.pdf ttt
-# mpirun -n 8 /usr/bin/python3 src/main_str.py data/390.pdf ttt
-# mpirun -n 16 /usr/bin/python3 src/main_str.py data/390.pdf ttt
+mpiexec -n 4 python src/main_str.py data/390.pdf ttt
+# srun --mpi=pmi python src/main_scatter.py data/390.pdf ttt
+# srun --mpi=pmi python src/main_scatter.py data/390.pdf data/391.pdf ttt
 
-
-# Define array of array sizes and cycles
-array_sizes=(20 40 200 400 2000 4000)
-cycles=100
-
-# # Print a header to the output file to distinguish outputs
-# echo "---- dotProductParallel Python Outputs ----" >> combined_output_%j.txt
-# # Execute the dotProductParallel Python script
-# for size in "${array_sizes[@]}"; do
-#     #echo "Running dotProductParallel.py with size $size and cycles $cycles" >> combined_output_%j.txt
-#     srun --unbuffered --mpi=pmi2 /usr/bin/python3 src/dotProductParallel.py $size $cycles >> combined_output_%j.txt 2>&1
-#     echo "----------------------------------------------------" >> combined_output_%j.txt
-# done

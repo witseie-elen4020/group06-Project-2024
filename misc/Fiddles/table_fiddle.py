@@ -29,7 +29,7 @@ def extract_tabs(file:str):
                     print(line, "... was found\n")
                     tab_captions.append(line)
 
-            tabs = page.find_tables(strategy="lines_strict")
+            tabs = page.find_tables(strategy="lines")
             #print(f"{len(tabs.tables)} tables were found")
 
             capt_count = len(tab_captions)
@@ -37,9 +37,9 @@ def extract_tabs(file:str):
             if capt_count == tab_count:
                 print(" -- Success ---")
             elif capt_count < tab_count:
-                # Chack was too strict and missed tables: try a more linient approach
+                # Check was too strict and missed tables: try a more lenient approach
                 tabs = page.find_tables(strategy="lines_strict")
-                print(f"was too easy but now now {capt_count} vs {len(tabs.tables)}")
+                print(f"was too easy but now {capt_count} vs {len(tabs.tables)}")
             else:   # There are more tables than caption, test was too lineient
                 tabs = page.find_tables(strategy="text", min_words_vertical = 10, min_words_horizontal = 10)
                 print(f"was too strict but now {capt_count} vs {len(tabs.tables)}")

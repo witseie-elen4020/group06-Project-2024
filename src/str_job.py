@@ -3,6 +3,7 @@ from typing import List
 import os
 import io
 import json
+import csv
 
 import fitz
 from PIL import Image
@@ -20,6 +21,9 @@ IMG_DIR = "Figures"
 IMG_FILE = "figure_captions.txt"
 FIG_TXT = "Figure"
 
+# Tables 
+TABLE_TAG = "TAB"
+
 # Content ans sections
 TEXT_TAG = "TXT"
 TEXT_FILE = "text.txt"
@@ -34,7 +38,10 @@ INFO_FILE = "info.json"
 # Returns an extraction job fo image retreval
 def get_img_job_str(caption:str, xref:int, pdf_pg:str, doc_pg:str):
     return SPLIT_STR.join([IMG_TAG, caption, str(xref), pdf_pg, doc_pg])
-# A string to indicate the start of the abstract job
+
+# Formats a table extraction job as a string
+def get_table_job_str(caption:str, ypos:int, pdf_pg:str, doc_pg:str):
+    return SPLIT_STR.join([TABLE_TAG, caption, ypos, pdf_pg, doc_pg])
 
 def get_jobs(job_strs:List[str]):
     jobs = []
@@ -54,6 +61,7 @@ def get_job(job_str:str):
     else:
         print(f"TODO unknow job {job_str[:3]}")
 
+# Jobs used for extracting and saving an image 
 class ImgJob:
     def __init__(self, job_str:str) -> None:
         [tag, self.capt, self.xref, self.pdf_pg, self.doc_pg] = job_str.split(SPLIT_STR)
@@ -144,6 +152,7 @@ class InfoJob:
             with open(os.path.join(save_path, TEXT_FILE), "w") as file:
                 file.write(self.txt)
 
+
 # Save table of content and each section as a sub-directory
 class ContentJob:
     def __init__(self, content_str:str, maj_split:str, min_split:str) -> None:
@@ -178,3 +187,8 @@ class ContentJob:
         except:
             return "ERROR! Contents not found\n"  
         
+# Job calss aossated with extracting and saving tables from a given page. This can be tedious
+class TableJob:
+    def __init__(self, job_str:str) -> None:
+        [tag, self.capt, self.pdf_pg, self.doc_pg] = job_str.split(SPLIT_STR)
+        assert(tag == TABLE_TAG)
