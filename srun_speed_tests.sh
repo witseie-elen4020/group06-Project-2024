@@ -1,11 +1,14 @@
 #!/bin/bash
-#SBATCH --job-name=srun_tests_4
-#SBATCH --output=parallel_4.txt
-#SBATCH --error=parallel_4_error.txt
+#SBATCH --job-name=srun_speed_tests
+#SBATCH --output=results/slurm/srun.txt
+#SBATCH --error=results/slurm/srun_error.txt
 #SBATCH --cpus-per-task=1
-#SBATCH --ntasks=4
+#SBATCH --ntasks=16
 
-# https://stackoverflow.com/questions/31848608/slurms-srun-slower-than-mpirun
+
+# This script is used to create an run a slurm batch of tests on the cluster.
+# The full number of tasks tested (16) are requested however the number of tasks allocated to each execution is varied
+# Each extraction operation if perfoemd five times becuase timing results are increadibly variable
 
 export SLURM_CPU_BIND=None
 
@@ -25,7 +28,9 @@ rm -rf $serial__dir
 rm -rf $worker_dir
 rm -rf $scatter_dir
 
-mpiexec -n 4 python src/main_str.py data/390.pdf ttt
-# srun --mpi=pmi python src/main_scatter.py data/390.pdf ttt
+#mpirun python src/main_str.py data/390.pdf ttt
+srun --unbuffered --mpi=pmi2 python src/main_scatter.py data/390.pdf ttt >> results/slurm/srun.txt
+
+srun --mpi=pmi2 python src/main_scatter.py data/390.pdf ttt >> srun.txt
 # srun --mpi=pmi python src/main_scatter.py data/390.pdf data/391.pdf ttt
 

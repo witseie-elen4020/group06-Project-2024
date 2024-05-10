@@ -1,0 +1,10 @@
+Number of processes: 16
+---------------------------
+File: data/390.pdf
+Pages: 34
+Jobs: 13
+Extraction Time: 0.020160198211669922
+Job Time: 1.41477370262146
+Total Time: 1.4349370002746582
+---------------------------
+

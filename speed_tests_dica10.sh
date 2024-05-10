@@ -1,5 +1,5 @@
 #!/bin/bash
-# This script perform paralle extraction on a single node (not via a network)
+# Similar to the orignal speed tests script but run on dica10 to investage scaling with 12 cores
 
 # Note - there are 20 compute nodes each with 4 cores and 32 GB mem
 # ntasks above is the number of cores - 40 is half the cluster, 80 is full
@@ -10,8 +10,8 @@
 serial_dir="results/serial_out"
 worker_dir="results/worder_out"
 scatter_dir="results/scatter_out"
-output_txt="results/times.txt"
-output_csv="results/times.csv"
+output_txt="results/times_dica10.txt"
+output_csv="results/times_dica10.csv"
 
 if [[ $# -ne '1' ]]; then
     echo "Usage:" $0 "<pdf-directory>"
@@ -33,7 +33,7 @@ echo "=== Serial ===" >> "$output_txt"
 python src/main_serial.py ${pdfs} $serial_dir >> "$output_txt"
 
 # Step through different number of porcersses
-sizes=(2 4 8 16)
+sizes=(2 4 8 12)
 for size in "${sizes[@]}"; do
     rm -rf $worker_dir # Delete old outputs so that file and directory creation times are included
     echo "=== Workers Parallel ===" >> "$output_txt"

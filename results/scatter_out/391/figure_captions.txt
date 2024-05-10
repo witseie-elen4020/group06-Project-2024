@@ -3,7 +3,9 @@ Figure 2. Simplified geological map of the Chambishi basin and location of drill
 Figure 3. Stratigraphic position of the samples		PDF_page:9		DOC_page:4
 Figure 4. Age vs. 39Ar released diagram, sample BH89/3		PDF_page:10		DOC_page:5
 Figure 5. Tera-Wasserburg diagram, sample RCB2/72		PDF_page:12		DOC_page:7
+Figure 6. Age vs. 39Ar released diagram, sample NN75/26 Table 4. SHRIMP Th-U-Pb results from monazites, sample RCB1/36		PDF_page:14		DOC_page:9
 Figure 7. Tera-Wasserburg diagram, sample RCB1/36		PDF_page:14		DOC_page:9
+Figure 8. Tera-Wasserburg diagram, sample RCB2/112 Chambishi basin, sample RCB2/112, biotite		PDF_page:16		DOC_page:11
 Figure 9. Age vs. 39Ar released diagram, sample RCB2/112 Chambishi basin, sample RCB2/4, biotite		PDF_page:17		DOC_page:12
 Figure 10. Age vs. 39Ar released diagram, sample RCB2/4		PDF_page:18		DOC_page:13
 Figure 11. Age vs. 39Ar released diagram, sample MJZC9/25		PDF_page:19		DOC_page:14
