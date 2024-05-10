@@ -1,0 +1,477 @@
+
+=== Serial ===
+Number of processes: 1 (Serial)
+---------------------------
+File: data/385.pdf
+Pages: 21
+Jobs: 10
+Extraction Time: 0.058162512999842875
+Job Time: 0.31914339400827885
+Total Time: 0.3773076380020939
+---------------------------
+File: data/386.pdf
+Pages: 66
+Jobs: 24
+Extraction Time: 0.14373845999944024
+Job Time: 1.6345664630061947
+Total Time: 1.7783078610082157
+---------------------------
+File: data/387.pdf
+Pages: 36
+Jobs: 19
+Extraction Time: 0.0674557689926587
+Job Time: 2.5376688999967882
+Total Time: 2.6051269460003823
+---------------------------
+File: data/388.pdf
+Pages: 18
+Jobs: 6
+Extraction Time: 0.030905836989404634
+Job Time: 0.8028378039889503
+Total Time: 0.833745193987852
+---------------------------
+File: data/389.pdf
+Pages: 53
+Jobs: 32
+Extraction Time: 0.08400390799215529
+Job Time: 3.2775717499898747
+Total Time: 3.361577556002885
+---------------------------
+File: data/390.pdf
+Pages: 34
+Jobs: 13
+Extraction Time: 0.05702714799554087
+Job Time: 0.7023416010051733
+Total Time: 0.7593705860053888
+---------------------------
+File: data/391.pdf
+Pages: 31
+Jobs: 16
+Extraction Time: 0.055800394009565935
+Job Time: 0.7302347860095324
+Total Time: 0.7860369760019239
+---------------------------
+=== Workers Parallel ===
+Number of processes: 2
+---------------------------
+File: data/385.pdf
+Pages: 21
+Jobs: 10
+Extraction Time: 0.03767561912536621
+Job Time: 0.3254885673522949
+Total Time: 0.36316657066345215
+---------------------------
+File: data/386.pdf
+Pages: 66
+Jobs: 24
+Extraction Time: 0.08647584915161133
+Job Time: 1.647780418395996
+Total Time: 1.7342586517333984
+---------------------------
+File: data/387.pdf
+Pages: 36
+Jobs: 19
+Extraction Time: 0.037850379943847656
+Job Time: 2.5751030445098877
+Total Time: 2.6129555702209473
+---------------------------
+File: data/388.pdf
+Pages: 18
+Jobs: 6
+Extraction Time: 0.019124269485473633
+Job Time: 0.8127801418304443
+Total Time: 0.831906795501709
+---------------------------
+File: data/389.pdf
+Pages: 53
+Jobs: 32
+Extraction Time: 0.05157804489135742
+Job Time: 3.3364338874816895
+Total Time: 3.388014793395996
+---------------------------
+File: data/390.pdf
+Pages: 34
+Jobs: 13
+Extraction Time: 0.0337986946105957
+Job Time: 0.7172660827636719
+Total Time: 0.7510671615600586
+---------------------------
+File: data/391.pdf
+Pages: 31
+Jobs: 16
+Extraction Time: 0.03156757354736328
+Job Time: 0.7431764602661133
+Total Time: 0.7747468948364258
+---------------------------
+
+=== Scatter Parallel ===
+Number of processes: 2
+---------------------------
+File: data/385.pdf
+Pages: 21
+Jobs: 10
+Extraction Time: 0.03837704658508301
+Job Time: 0.17594528198242188
+Total Time: 0.2143244743347168
+---------------------------
+File: data/386.pdf
+Pages: 66
+Jobs: 24
+Extraction Time: 0.08848214149475098
+Job Time: 0.8908045291900635
+Total Time: 0.9792888164520264
+---------------------------
+File: data/387.pdf
+Pages: 36
+Jobs: 19
+Extraction Time: 0.03915858268737793
+Job Time: 1.565882682800293
+Total Time: 1.605043888092041
+---------------------------
+File: data/388.pdf
+Pages: 18
+Jobs: 6
+Extraction Time: 0.019002199172973633
+Job Time: 0.7852835655212402
+Total Time: 0.8042881488800049
+---------------------------
+File: data/389.pdf
+Pages: 53
+Jobs: 32
+Extraction Time: 0.0511319637298584
+Job Time: 2.140594720840454
+Total Time: 2.1917293071746826
+---------------------------
+File: data/390.pdf
+Pages: 34
+Jobs: 13
+Extraction Time: 0.03261137008666992
+Job Time: 0.41027283668518066
+Total Time: 0.4428865909576416
+---------------------------
+File: data/391.pdf
+Pages: 31
+Jobs: 16
+Extraction Time: 0.0322263240814209
+Job Time: 0.5671935081481934
+Total Time: 0.5994222164154053
+---------------------------
+
+=== Workers Parallel ===
+Number of processes: 4
+---------------------------
+File: data/385.pdf
+Pages: 21
+Jobs: 10
+Extraction Time: 0.029619932174682617
+Job Time: 0.13641071319580078
+Total Time: 0.16603302955627441
+---------------------------
+File: data/386.pdf
+Pages: 66
+Jobs: 24
+Extraction Time: 0.05645132064819336
+Job Time: 0.6161952018737793
+Total Time: 0.6726493835449219
+---------------------------
+File: data/387.pdf
+Pages: 36
+Jobs: 19
+Extraction Time: 0.04623055458068848
+Job Time: 1.21734619140625
+Total Time: 1.2635796070098877
+---------------------------
+File: data/388.pdf
+Pages: 18
+Jobs: 6
+Extraction Time: 0.012014389038085938
+Job Time: 0.8018286228179932
+Total Time: 0.8138456344604492
+---------------------------
+File: data/389.pdf
+Pages: 53
+Jobs: 32
+Extraction Time: 0.03511500358581543
+Job Time: 1.3444321155548096
+Total Time: 1.379549503326416
+---------------------------
+File: data/390.pdf
+Pages: 34
+Jobs: 13
+Extraction Time: 0.021995067596435547
+Job Time: 0.39415907859802246
+Total Time: 0.4161562919616699
+---------------------------
+File: data/391.pdf
+Pages: 31
+Jobs: 16
+Extraction Time: 0.02112603187561035
+Job Time: 0.36356186866760254
+Total Time: 0.384690523147583
+---------------------------
+
+=== Scatter Parallel ===
+Number of processes: 4
+---------------------------
+File: data/385.pdf
+Pages: 21
+Jobs: 10
+Extraction Time: 0.030528545379638672
+Job Time: 0.2679135799407959
+Total Time: 0.2984452247619629
+---------------------------
+File: data/386.pdf
+Pages: 66
+Jobs: 24
+Extraction Time: 0.05768322944641113
+Job Time: 0.6231980323791504
+Total Time: 0.6808836460113525
+---------------------------
+File: data/387.pdf
+Pages: 36
+Jobs: 19
+Extraction Time: 0.03351855278015137
+Job Time: 1.0593338012695312
+Total Time: 1.0928552150726318
+---------------------------
+File: data/388.pdf
+Pages: 18
+Jobs: 6
+Extraction Time: 0.012591361999511719
+Job Time: 0.8094711303710938
+Total Time: 0.8220651149749756
+---------------------------
+File: data/389.pdf
+Pages: 53
+Jobs: 32
+Extraction Time: 0.034638166427612305
+Job Time: 1.3455443382263184
+Total Time: 1.3801848888397217
+---------------------------
+File: data/390.pdf
+Pages: 34
+Jobs: 13
+Extraction Time: 0.021815776824951172
+Job Time: 0.39650750160217285
+Total Time: 0.41832542419433594
+---------------------------
+File: data/391.pdf
+Pages: 31
+Jobs: 16
+Extraction Time: 0.021637678146362305
+Job Time: 0.5111513137817383
+Total Time: 0.5327911376953125
+---------------------------
+
+=== Workers Parallel ===
+Number of processes: 8
+---------------------------
+File: data/385.pdf
+Pages: 21
+Jobs: 10
+Extraction Time: 0.20822978019714355
+Job Time: 0.28601574897766113
+Total Time: 0.4942491054534912
+---------------------------
+File: data/386.pdf
+Pages: 66
+Jobs: 24
+Extraction Time: 0.09392476081848145
+Job Time: 0.7679698467254639
+Total Time: 0.8618993759155273
+---------------------------
+File: data/387.pdf
+Pages: 36
+Jobs: 19
+Extraction Time: 0.08798027038574219
+Job Time: 1.3277835845947266
+Total Time: 1.415766716003418
+---------------------------
+File: data/388.pdf
+Pages: 18
+Jobs: 6
+Extraction Time: 0.08815479278564453
+Job Time: 1.9478566646575928
+Total Time: 2.0360145568847656
+---------------------------
+File: data/389.pdf
+Pages: 53
+Jobs: 32
+Extraction Time: 0.1000525951385498
+Job Time: 1.4664981365203857
+Total Time: 1.5665533542633057
+---------------------------
+File: data/390.pdf
+Pages: 34
+Jobs: 13
+Extraction Time: 0.04546642303466797
+Job Time: 0.6799774169921875
+Total Time: 0.7254464626312256
+---------------------------
+File: data/391.pdf
+Pages: 31
+Jobs: 16
+Extraction Time: 0.04798269271850586
+Job Time: 0.7159712314605713
+Total Time: 0.7639567852020264
+---------------------------
+
+=== Scatter Parallel ===
+Number of processes: 8
+---------------------------
+File: data/385.pdf
+Pages: 21
+Jobs: 10
+Extraction Time: 0.08447575569152832
+Job Time: 0.37299442291259766
+Total Time: 0.4574730396270752
+---------------------------
+File: data/386.pdf
+Pages: 66
+Jobs: 24
+Extraction Time: 0.11092448234558105
+Job Time: 0.821068286895752
+Total Time: 0.931995153427124
+---------------------------
+File: data/387.pdf
+Pages: 36
+Jobs: 19
+Extraction Time: 0.05265021324157715
+Job Time: 2.014190673828125
+Total Time: 2.0668437480926514
+---------------------------
+File: data/388.pdf
+Pages: 18
+Jobs: 6
+Extraction Time: 0.03175163269042969
+Job Time: 1.940194845199585
+Total Time: 1.9719505310058594
+---------------------------
+File: data/389.pdf
+Pages: 53
+Jobs: 32
+Extraction Time: 0.08001255989074707
+Job Time: 1.5639278888702393
+Total Time: 1.6439435482025146
+---------------------------
+File: data/390.pdf
+Pages: 34
+Jobs: 13
+Extraction Time: 0.07198238372802734
+Job Time: 0.8879637718200684
+Total Time: 0.959949254989624
+---------------------------
+File: data/391.pdf
+Pages: 31
+Jobs: 16
+Extraction Time: 0.05429339408874512
+Job Time: 1.0933759212493896
+Total Time: 1.147672414779663
+---------------------------
+
+=== Workers Parallel ===
+Number of processes: 12
+---------------------------
+File: data/385.pdf
+Pages: 21
+Jobs: 10
+Extraction Time: 0.3568613529205322
+Job Time: 0.48630809783935547
+Total Time: 0.8431739807128906
+---------------------------
+File: data/386.pdf
+Pages: 66
+Jobs: 24
+Extraction Time: 0.16678452491760254
+Job Time: 0.839531660079956
+Total Time: 1.0063202381134033
+---------------------------
+File: data/387.pdf
+Pages: 36
+Jobs: 19
+Extraction Time: 0.08280611038208008
+Job Time: 1.83595871925354
+Total Time: 1.9187676906585693
+---------------------------
+File: data/388.pdf
+Pages: 18
+Jobs: 6
+Extraction Time: 0.07390189170837402
+Job Time: 2.467158079147339
+Total Time: 2.5410633087158203
+---------------------------
+File: data/389.pdf
+Pages: 53
+Jobs: 32
+Extraction Time: 0.07488727569580078
+Job Time: 1.8159475326538086
+Total Time: 1.890838384628296
+---------------------------
+File: data/390.pdf
+Pages: 34
+Jobs: 13
+Extraction Time: 0.07030987739562988
+Job Time: 1.3205630779266357
+Total Time: 1.390876054763794
+---------------------------
+File: data/391.pdf
+Pages: 31
+Jobs: 16
+Extraction Time: 0.09702730178833008
+Job Time: 1.015991449356079
+Total Time: 1.1130218505859375
+---------------------------
+
+=== Scatter Parallel ===
+Number of processes: 12
+---------------------------
+File: data/385.pdf
+Pages: 21
+Jobs: 10
+Extraction Time: 0.14303159713745117
+Job Time: 0.41162848472595215
+Total Time: 0.554663896560669
+---------------------------
+File: data/386.pdf
+Pages: 66
+Jobs: 24
+Extraction Time: 0.12400412559509277
+Job Time: 0.9599523544311523
+Total Time: 1.083961009979248
+---------------------------
+File: data/387.pdf
+Pages: 36
+Jobs: 19
+Extraction Time: 0.11996674537658691
+Job Time: 2.875957489013672
+Total Time: 2.995927572250366
+---------------------------
+File: data/388.pdf
+Pages: 18
+Jobs: 6
+Extraction Time: 0.047998905181884766
+Job Time: 2.4919512271881104
+Total Time: 2.539952516555786
+---------------------------
+File: data/389.pdf
+Pages: 53
+Jobs: 32
+Extraction Time: 0.0920097827911377
+Job Time: 2.091930627822876
+Total Time: 2.183943510055542
+---------------------------
+File: data/390.pdf
+Pages: 34
+Jobs: 13
+Extraction Time: 0.12396407127380371
+Job Time: 1.4159798622131348
+Total Time: 1.5399470329284668
+---------------------------
+File: data/391.pdf
+Pages: 31
+Jobs: 16
+Extraction Time: 0.11199331283569336
+Job Time: 1.6979312896728516
+Total Time: 1.8099274635314941
+---------------------------
+
