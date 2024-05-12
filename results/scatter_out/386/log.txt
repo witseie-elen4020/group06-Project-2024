@@ -1,1 +1,8 @@
 Note. Ignored 1 uncaptioned images On PDF page 1
+Note. Ignored 4 uncaptioned images On PDF page 10
+ERROR! Could not find image with caption: 'Figure 3. Stages in ...'  On PDF page 11
+ERROR! Could not find image with caption: 'Figure 8. Diagrams a...'  On PDF page 23
+ERROR! Could not find image with caption: 'Figure 9. Diagrammat...'  On PDF page 24
+ERROR! Could not find image with caption: 'Figure 10. Sketch di...'  On PDF page 26
+ERROR! Could not find image with caption: 'Figure 19. Diagram s...'  On PDF page 36
+ERROR! Could not find image with caption: 'Figure 23. Lead-isot...'  On PDF page 45

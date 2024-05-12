@@ -124,8 +124,6 @@ if __name__ == "__main__":
 
         
         # ==== preapre jobs
-        log = log if rank == 0 else ""
-
         img_save_path = os.path.join(save_path,IMG_DIR)
         if rank == 0:
             if not os.path.exists(img_save_path):

@@ -157,7 +157,6 @@ if __name__ == "__main__":
         # Asycn manager worker system
         busy = True
         if rank == 0:
-            log = "".join(log)
             pool_len = len(job_pool)
             for __ in range(pool_len+size-1):
                 req = comm.irecv(tag=JOB_REQUEST)
@@ -166,7 +165,6 @@ if __name__ == "__main__":
                 req = comm.isend(job, dest=worker_rank, tag=JOB_DISPATCH)
             busy = False
         else:
-            log = ""
             while busy:
                 # Request a job from manager thread
                 req = comm.isend(rank, dest=0, tag=JOB_REQUEST)
@@ -186,6 +184,7 @@ if __name__ == "__main__":
         log_save_rank = LOG_NO%size
         log = comm.gather(log, root = log_save_rank)
         if rank == log_save_rank:
+            print(log)
             with open(os.path.join(save_path, "log.txt"), "w") as file:
                 file.write("".join(log))
 
