@@ -102,7 +102,7 @@ class ImgJob:
         except:
             try: 
                 fig_int = int(label.strip(FIG_TXT).strip(".").strip(":"))
-                fig_numaer = label.strip(FIG_TXT).strip(".").strip(":")
+                fig_number = label.strip(FIG_TXT).strip(".").strip(":")
             except:
                 log = f"Figure with number non-numeric number '{fig_number}' on pdf page {int(self.pdf_pg)+1}."
 
@@ -114,7 +114,7 @@ class ImgJob:
         metadata.add_text("label", label)
         metadata.add_text("number", fig_number)
         metadata.add_text("caption", caption)
-        metadata.add_text("document", file_name)
+        metadata.add_text("document", os.path.basename(file_name))
 
         save_path = os.path.join(save_path, IMG_DIR,image_file_name)
 

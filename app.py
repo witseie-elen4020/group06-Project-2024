@@ -134,8 +134,8 @@ def view_table_captions(pdf_directory):
                 doc_page = columns[4]
                 print(f"Table {i}:")
                 print(f"Caption: {caption}")
-                print(f"PDF Page: {pdf_page}")
-                print(f"DOC Page: {doc_page}")
+                print(f"PDF Page: {pdf_page.split(':')[-1]}")
+                print(f"DOC Page: {doc_page.split(':')[-1]}")
                 print()
             # for line in file:
             #     columns = line.strip().split("\t")
@@ -152,6 +152,12 @@ def view_table_captions(pdf_directory):
 def main():
     welcome_message()
     pdf_path = get_file_path()
+
+    # Check that file path is valid
+    while not os.path.exists(pdf_path): 
+        print(f"PDF file '{pdf_path}' not found.")
+        pdf_path = get_file_path()
+
     stdout, stderr = run_backend_program(pdf_path, output_dir)
     # Print the output of the backend program
     print("\n=============")

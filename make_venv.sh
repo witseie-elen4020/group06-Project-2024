@@ -13,5 +13,5 @@ else
     source venv/bin/activate
 fi
 
-python -m pip PyMuPDF Pillow
-python -m pip install mpi4py
+python -m pip PyMuPDF Pillow # For pdf data extraction
+python -m pip install mpi4py # For multi-prcessing and message passing

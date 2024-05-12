@@ -75,9 +75,9 @@ with fitz.open(file) as doc:
             print(line)
                 
 
-    print("fingur")
+    print("figurs:")
     print(fig_captions)
-    print("tbake")
+    print("tables:")
     print(table_captions)
 
 
