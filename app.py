@@ -34,9 +34,11 @@ def display_options():
     print("3. View Abstract")
     print("4. View Figures Captions")
     print("5. View Figures Metadata")
-    print("6. View File Location")
-    print("7. View Logs")
-    print("8. Exit")
+    print("6. View Table Captions")
+    print("7. View File Location")
+    print("8. View Logs")
+    print("9. Exit")
+    
 
 def view_logs(pdf_directory):
     logs_path = os.path.join(pdf_directory, "log.txt")
@@ -116,7 +118,37 @@ def extract_metadata(image_path):
         metadata = img.info
 
     return metadata
-    
+
+def view_table_captions(pdf_directory):
+    print() 
+    table_captions_path = os.path.join(pdf_directory, "table_captions.txt")
+    if os.path.exists(table_captions_path):
+        with open(table_captions_path, "r") as file:
+            lines = file.readlines()
+            num_tables = len(lines)
+            print(f"Total number of tables detected: {num_tables}")
+            for i, line in enumerate(lines, start=1):
+                columns = line.strip().split("\t")
+                caption = columns[0]
+                pdf_page = columns[2]
+                doc_page = columns[4]
+                print(f"Table {i}:")
+                print(f"Caption: {caption}")
+                print(f"PDF Page: {pdf_page}")
+                print(f"DOC Page: {doc_page}")
+                print()
+            # for line in file:
+            #     columns = line.strip().split("\t")
+            #     caption = columns[0]
+            #     pdf_page = columns[2]
+            #     doc_page = columns[4]
+            #     print(f"{caption}")
+            #     print(f"PDF Page: {pdf_page}")
+            #     print(f"DOC Page: {doc_page}")
+            #     print()
+    else:
+        print("Table captions file not found.")
+
 def main():
     welcome_message()
     pdf_path = get_file_path()
@@ -139,7 +171,7 @@ def main():
 
     while True:
         display_options()
-        choice = input("Enter your choice (1-7): ")
+        choice = input("Enter your choice (1-9): ")
         if choice == "1":
             print("\nTitle:", info_data.get("Title", "Title not found"))
         elif choice == "2":
@@ -154,10 +186,13 @@ def main():
             figures_directory = os.path.join(output_dir, pdf_path_base, "Figures")
             print_image_metadata_in_directory(figures_directory)
         elif choice == "6":
-            print("\nFile Location:", info_data.get("File", "File location not found"))
+            figures_directory = os.path.join(output_dir, pdf_path_base)
+            view_table_captions(figures_directory)
         elif choice == "7":
-            view_logs(os.path.join(output_dir, pdf_path_base))
+            print("\nFile Location:", info_data.get("File", "File location not found"))
         elif choice == "8":
+            view_logs(os.path.join(output_dir, pdf_path_base))
+        elif choice == "9":
             print("Exiting...")
             break
         else:
