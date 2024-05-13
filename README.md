@@ -26,6 +26,8 @@ python app.py
 ## Run Tests
 There are three test configurations which can be used to benchmark an implementation on different systems. Each set of tests will generate a `.txt` file containing script outputs, and a `.csv` file containing the documents' information and execution times. These files are stored in the `results/` folder.
 Three subdirectories will also be created in `results/` to store information extracted from the PDFs using each implementation: `scatter_out/`, `worker _out/` and `serial_out/`. These directories are deleted each time a benchmarking (speed) test is run to ensure that file creation time is also recorded.
+### Input PDFs
+This repository does not include the EGRI PDFs. All documents sued for benchmarking can be downloaded from the data repository.
 ### Speed Tests
 General benchmarking tests can be run with `mpiexec` using the command:
 ```shell
