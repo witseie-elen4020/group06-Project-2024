@@ -13,7 +13,7 @@ else
     source venv/bin/activate
 fi
 
-python -m pip PyMuPDF Pillow # For pdf data extraction
+python -m pip install PyMuPDF Pillow # For pdf data extraction
 python -m pip install mpi4py # For multi-prcessing and message passing
 python -m pip install pprintpp # For frontend application
 python -m pip install questionary # For frontend application
