@@ -18,25 +18,31 @@ def welcome_message():
     print("=======================================================\n" + Style.RESET_ALL)
 
 def get_file_path():
-    choice = questionary.select(
-        "How would you like to specify the PDF file?",
-        choices=[
-            'Enter the complete file path',
-            'Specify a directory and select a PDF'
-        ]).ask()
+    while True:
+        choice = questionary.select(
+            "How would you like to specify the PDF file?",
+            choices=[
+                'Enter the complete file path',
+                'Specify a directory and select a PDF',
+                'Exit'
+            ]).ask()
 
-    if choice == 'Enter the complete file path':
-        return input("Please enter the path to your PDF file: ")
-    elif choice == 'Specify a directory and select a PDF':
-        directory = input("Please enter the directory: ")
-        pdf_files = glob.glob(os.path.join(directory, '*.pdf'))
-        if not pdf_files:
-            print("No PDF files found in the specified directory.")
-            return None
-        return questionary.select(
-            "Please select a PDF file:",
-            choices=pdf_files
-        ).ask()
+        if choice == 'Enter the complete file path':
+            return input("Please enter the path to your PDF file: ")
+        elif choice == 'Specify a directory and select a PDF':
+            directory = input("Please enter the directory: ")
+            pdf_files = glob.glob(os.path.join(directory, '*.pdf'))
+            if not pdf_files:
+                print("No PDF files found in the specified directory.")
+            else:
+                pdf_files.sort()  # Sort the list alphabetically
+                return questionary.select(
+                    "Please select a PDF file:",
+                    choices=pdf_files
+                ).ask()
+        elif choice == 'Exit':  # Handle the 'Exit' choice
+            print(f"{Fore.RED}Exiting...{Style.RESET_ALL}")
+            sys.exit()  # Exit the program
 
 def run_backend_program(pdf_path, output_dir):
     # Adjust the execution command to use mpiexec
@@ -171,34 +177,37 @@ def display_options():
             'View Table Captions',
             'View File Location',
             'View Logs',
+            'Process Another PDF',
             'Exit'
         ]).ask()
 
 def main():
     welcome_message()
-    pdf_path = get_file_path()
-
-    # Check that file path is valid
-    while not os.path.exists(pdf_path): 
-        print(f"PDF file '{pdf_path}' not found.")
+    
+    while True:
         pdf_path = get_file_path()
 
-    stdout, stderr = run_backend_program(pdf_path, output_dir)
-    # Print the output of the backend program
-    print(Fore.CYAN + "\n=============")
-    print("Script Output")
-    print("=============\n" + Style.RESET_ALL)
-    print(stdout)
-    
-    # Change pdf file to be base path
-    pdf_path_base = os.path.splitext(os.path.basename(pdf_path))[0]
-    # Extract information from the JSON file
-    json_file_path = os.path.join(output_dir, pdf_path_base, "info.json")
-    if os.path.exists(json_file_path):
-        info_data = extract_info_from_json(json_file_path)
-    else:
-        print("Info JSON file not found.")
-        return
+        # Check that file path is valid
+        if not os.path.exists(pdf_path):
+            print(f"PDF file '{pdf_path}' not found.")
+            continue
+
+        stdout, stderr = run_backend_program(pdf_path, output_dir)
+        # Print the output of the backend program
+        print(Fore.CYAN + "\n=============")
+        print("Script Output")
+        print("=============\n" + Style.RESET_ALL)
+        print(stdout)
+        
+        # Change pdf file to be base path
+        pdf_path_base = os.path.splitext(os.path.basename(pdf_path))[0]
+        # Extract information from the JSON file
+        json_file_path = os.path.join(output_dir, pdf_path_base, "info.json")
+        if os.path.exists(json_file_path):
+            info_data = extract_info_from_json(json_file_path)
+            break  # Exit the loop if JSON file is found
+        else:
+            print("Info JSON file not found. Please select another PDF.\n")
 
     print(f"\nThe script has run successfully. Results for report '{Fore.GREEN}{info_data.get('Title', 'Title not found')}{Style.RESET_ALL}' have been stored in directory '{Fore.GREEN}output{Style.RESET_ALL}'")
 
@@ -252,9 +261,11 @@ def main():
             print("LOGS".center(30))
             print("="*30 + Style.RESET_ALL + "\n")
             view_logs(os.path.join(output_dir, pdf_path_base))
+        elif choice == "Process Another PDF":
+            main()  # Restart the main function to process another PDF
         elif choice == "Exit":
             print(f"{Fore.RED}Exiting...{Style.RESET_ALL}")
-            break
+            sys.exit()  # Exit the program
         else:
             print("Invalid choice. Please enter a number between 1 and 8.")
 
