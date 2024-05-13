@@ -2,18 +2,41 @@ import os
 import subprocess
 import sys
 import json
+import glob
 from PIL import Image
 from pprint import pprint
+import questionary
+from colorama import Fore, Style
 
 output_dir = "output"
 
+os.system("clear")
+
 def welcome_message():
-    print("=======================================================")
+    print(Fore.YELLOW + "=======================================================")
     print("Welcome to the PDF Data Extraction Console Application!")
-    print("=======================================================\n")
+    print("=======================================================\n" + Style.RESET_ALL)
 
 def get_file_path():
-    return input("Please enter the path to your PDF file: ")
+    choice = questionary.select(
+        "How would you like to specify the PDF file?",
+        choices=[
+            'Enter the complete file path',
+            'Specify a directory and select a PDF'
+        ]).ask()
+
+    if choice == 'Enter the complete file path':
+        return input("Please enter the path to your PDF file: ")
+    elif choice == 'Specify a directory and select a PDF':
+        directory = input("Please enter the directory: ")
+        pdf_files = glob.glob(os.path.join(directory, '*.pdf'))
+        if not pdf_files:
+            print("No PDF files found in the specified directory.")
+            return None
+        return questionary.select(
+            "Please select a PDF file:",
+            choices=pdf_files
+        ).ask()
 
 def run_backend_program(pdf_path, output_dir):
     # Adjust the execution command to use mpiexec
@@ -27,26 +50,13 @@ def extract_info_from_json(json_file_path):
 
     return data
 
-def display_options():
-    print("\nSelect an option to view:")
-    print("1. View Report Title")
-    print("2. View Report Authors")
-    print("3. View Abstract")
-    print("4. View Figures Captions")
-    print("5. View Figures Metadata")
-    print("6. View Table Captions")
-    print("7. View File Location")
-    print("8. View Logs")
-    print("9. Exit")
-    
-
 def view_logs(pdf_directory):
     logs_path = os.path.join(pdf_directory, "log.txt")
     if os.path.exists(logs_path):
         with open(logs_path, "r") as file:
-            print("\n=================")
-            print("Logs from log.txt")
-            print("=================\n")
+            # print("\n=================")
+            # print("Logs from log.txt")
+            # print("=================\n")
             print(file.read())
     else:
         print("Logs file not found.")
@@ -149,6 +159,21 @@ def view_table_captions(pdf_directory):
     else:
         print("Table captions file not found.")
 
+def display_options():
+    return questionary.select(
+        "Select an option to view:",
+        choices=[
+            'View Report Title',
+            'View Report Authors',
+            'View Abstract',
+            'View Figures Captions',
+            'View Figures Metadata',
+            'View Table Captions',
+            'View File Location',
+            'View Logs',
+            'Exit'
+        ]).ask()
+
 def main():
     welcome_message()
     pdf_path = get_file_path()
@@ -160,9 +185,9 @@ def main():
 
     stdout, stderr = run_backend_program(pdf_path, output_dir)
     # Print the output of the backend program
-    print("\n=============")
+    print(Fore.CYAN + "\n=============")
     print("Script Output")
-    print("=============\n")
+    print("=============\n" + Style.RESET_ALL)
     print(stdout)
     
     # Change pdf file to be base path
@@ -175,31 +200,60 @@ def main():
         print("Info JSON file not found.")
         return
 
+    print(f"\nThe script has run successfully. Results for report '{Fore.GREEN}{info_data.get('Title', 'Title not found')}{Style.RESET_ALL}' have been stored in directory '{Fore.GREEN}output{Style.RESET_ALL}'")
+
+    print("\nYou can now view the extracted information from the PDF file.\n")
     while True:
-        display_options()
-        choice = input("Enter your choice (1-9): ")
-        if choice == "1":
-            print("\nTitle:", info_data.get("Title", "Title not found"))
-        elif choice == "2":
-            print("\nAuthors:", info_data.get("Authors", "Authors not found"))
-        elif choice == "3":
-            print("\nAbstract:", info_data.get("Abstract", "Abstract not found"))
-        elif choice == "4":
+        choice = display_options()
+        if choice == "View Report Title":
+            print("\n" + Fore.YELLOW + "="*30)
+            print("TITLE".center(30))
+            print("="*30 + "\n" + Style.RESET_ALL)
+            print("\n" + Fore.YELLOW + "Title:".ljust(10) + Style.RESET_ALL,info_data.get("Title", "Title not found"))
+            print("\n")
+        elif choice == "View Report Authors":
+            print("\n" + Fore.YELLOW + "="*30)
+            print("AUTHORS".center(30))
+            print("="*30 + "\n" + Style.RESET_ALL)
+            print("\n" + Fore.YELLOW + "Authors:".ljust(10) + Style.RESET_ALL, info_data.get("Authors", "Authors not found"))
+            print("\n")
+        elif choice == "View Abstract":
+            print("\n" + Fore.YELLOW + "="*30)
+            print("ABSTRACT".center(30))
+            print("="*30 + "\n")
+            print(Fore.YELLOW + "Abstract:".ljust(10) + Style.RESET_ALL, info_data.get("Abstract", "Abstract not found"))
+        elif choice == "View Figures Captions":
+            print("\n" + Fore.YELLOW + "="*30)
+            print("FIGURES CAPTIONS".center(30))
+            print("="*30 + Style.RESET_ALL + "\n")
             figures_directory = os.path.join(output_dir, pdf_path_base, "Figures")
             print("\nTotal number of images extracted:", count_images(figures_directory))
             print_captions_in_directory(figures_directory)
-        elif choice == "5":
+        elif choice == "View Figures Metadata":
+            print("\n" + Fore.YELLOW + "="*30)
+            print("FIGURES METADATA".center(30))
+            print("="*30 + Style.RESET_ALL + "\n")
             figures_directory = os.path.join(output_dir, pdf_path_base, "Figures")
             print_image_metadata_in_directory(figures_directory)
-        elif choice == "6":
+        elif choice == "View Table Captions":
+            print("\n" + Fore.YELLOW + "="*30)
+            print("TABLE CAPTIONS".center(30))
+            print("="*30 + Style.RESET_ALL + "\n")
             figures_directory = os.path.join(output_dir, pdf_path_base)
             view_table_captions(figures_directory)
-        elif choice == "7":
-            print("\nFile Location:", info_data.get("File", "File location not found"))
-        elif choice == "8":
+        elif choice == "View File Location":
+            print("\n" + Fore.YELLOW + "="*30)
+            print("FILE LOCATION".center(30))
+            print("="*30 + "\n")
+            print("\n" + Fore.YELLOW + "File Location:".ljust(10) + Style.RESET_ALL, info_data.get("File", "File location not found"))
+            print("\n")
+        elif choice == "View Logs":
+            print("\n" + Fore.YELLOW + "="*30)
+            print("LOGS".center(30))
+            print("="*30 + Style.RESET_ALL + "\n")
             view_logs(os.path.join(output_dir, pdf_path_base))
-        elif choice == "9":
-            print("Exiting...")
+        elif choice == "Exit":
+            print(f"{Fore.RED}Exiting...{Style.RESET_ALL}")
             break
         else:
             print("Invalid choice. Please enter a number between 1 and 8.")
