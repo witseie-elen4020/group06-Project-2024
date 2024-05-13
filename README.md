@@ -1,5 +1,5 @@
 # ELEN4020 Project - PDF data extraction from the EGRI database 
-This repository contains python scripts and tests results from an investigation into the suitability and scalability of two parallelisation implementations (scatter and worker) for information extraction from the Wits Economic Geology Research Institute (EGRI) reports and stored as searchable PDFs.
+This repository contains python scripts and tests results from an investigation into the suitability and scalability of two parallelisation implementations (scatter and worker-manager) for information extraction from the Wits Economic Geology Research Institute (EGRI) reports and stored as searchable PDFs.
 
 ## Dependencies
 This system uses [mpi4pi](https://mpi4py.readthedocs.io/en/stable/) for parallelisation. [PyMuPDF](https://pymupdf.readthedocs.io/en/latest/index.html) and [Pillow](https://pypi.org/project/pillow/) are used for PDF data extraction and image saving.
@@ -32,7 +32,7 @@ General benchmarking tests can be run with `mpiexec` using the command:
 bash speed_tests.sh <data-directory>
 ```
 `<data-directory>` is a folder that must contain a selection of EGRI PDFs that can be used as inputs to benchmark data extraction times.
-This (general) test configuration is designed for performance benchmarking on a single node and will time each extraction using 2, 4, 8, and 16 processes for both scatter and worker implementations. The serial process is also timed to serve as a reference. Program outputs and extraction times are saved in `results/times.txt` and `results/times.csv`.
+This (general) test configuration is designed for performance benchmarking on a single node and will time each extraction using 2, 4, 8, and 16 processes for both scatter and worker-manager implementations. The serial process is also timed to serve as a reference. Program outputs and extraction times are saved in `results/times.txt` and `results/times.csv`.
 ### Speed Tests on Dica10
 A second single-node speed test script is created to run tests on the Dica10 node with 2, 4, 6, 8 and 12 process counts. This should be run to test extraction scalability on a single node that has more than four cores.
 ```shell
