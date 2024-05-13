@@ -184,7 +184,6 @@ if __name__ == "__main__":
         log_save_rank = LOG_NO%size
         log = comm.gather(log, root = log_save_rank)
         if rank == log_save_rank:
-            print(log)
             with open(os.path.join(save_path, "log.txt"), "w") as file:
                 file.write("".join(log))
 

@@ -96,7 +96,6 @@ class ImgJob:
 
         # Ensure that figure number is numeric
         fig_number = fig_number.strip(".").strip(":")
-        image_file_name = "fig_" + fig_number + ".png"
         try:
             fig_int = int(fig_number)
         except:
@@ -105,6 +104,7 @@ class ImgJob:
                 fig_number = label.strip(FIG_TXT).strip(".").strip(":")
             except:
                 log = f"Figure with number non-numeric number '{fig_number}' on pdf page {int(self.pdf_pg)+1}."
+        image_file_name = "fig_" + fig_number + ".png"
 
 
 
